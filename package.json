@@ -23,6 +23,7 @@
     "material-ui": "^0.20.2",
     "mdb-react-ui-kit": "^5.1.0",
     "moment": "^2.29.4",
+    "opt": "^0.1.14",
     "proxy": "^1.0.2",
     "react": "^17.0.2",
     "react-circular-progressbar": "^2.0.4",

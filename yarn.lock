@@ -9246,6 +9246,11 @@ open@^8.0.9, open@^8.4.0:
     is-docker "^2.1.1"
     is-wsl "^2.2.0"
 
+opt@^0.1.14:
+  version "0.1.14"
+  resolved "https://registry.yarnpkg.com/opt/-/opt-0.1.14.tgz#03f9ff4567587961d5985a5e9c983833122934af"
+  integrity sha512-0obuRE/sczuhbpgCl/o2M36ALa4+CrcGg3ZhBQMIWIoib6gzsk1CJZkYW5eQK9ZTJ3d6uaxHmhh8pUBf2Yq5ow==
+
 optionator@^0.8.1:
   version "0.8.3"
   resolved "https://registry.yarnpkg.com/optionator/-/optionator-0.8.3.tgz#84fa1d036fe9d3c7e21d99884b601167ec8fb495"
