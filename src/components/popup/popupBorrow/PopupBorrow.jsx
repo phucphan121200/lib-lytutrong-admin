@@ -1,0 +1,310 @@
+import React, { useEffect, useState } from 'react'
+import { DataGrid } from "@mui/x-data-grid";
+import "./popupBorrow.scss"
+import { getListBook, getBorrowedBook, getReturnedBook, getCartAdmin, borrowBook } from "../../../context/bookContext/apiCalls"
+import { getListUser } from "../../../context/userContext/apiCalls"
+import Moment from 'moment';
+import { Add, Remove } from "@material-ui/icons";
+import LoadingCircle from '../../loadingCircle/LoadingCircle';
+import { Avatar, TextField, Autocomplete } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+
+
+const PopupBorrow = ({ setOpenModal, setNoti, setDataUser, setDataCart }) => {
+
+    const [book, setBook] = useState("")
+    const [user, setUser] = useState("")
+    const [data, setData] = useState({ cartItems: [] })
+    const [url, setUrl] = useState(null)
+    const [record, setRecord] = useState("")
+
+    const handleChangeAutoComplete = (e, value) => {
+        setData({ ...data, userBorrowInfo: value._id });
+        setUrl(value.image)
+    };
+
+    // const handleChange = (e) => {
+    //     const value = e.target.value;
+    //     setData({ ...data, [e.target.name]: value });
+    // };
+
+    const handleSearch = (e) => {
+        const newData = book.filter(row => {
+            return row.name.toLowerCase().includes(e.target.value.toLowerCase())
+        })
+        setRecord(newData)
+    }
+
+    useEffect(() => {
+        (async () => {
+            const bookList = await getListBook(setNoti)
+            setBook(bookList?.data?.data.map((item, index, amount) => ({ ...item, index: index + 1, amount: 0 })))
+            setRecord(bookList?.data?.data.map((item, index, amount) => ({ ...item, index: index + 1, amount: 0 })))
+            const userList = await getListUser(setNoti)
+            setUser(userList?.data?.data.map((item) => ({ ...item, label: item.name })))
+        })()
+        return;
+    }, [])
+    const handleQuantity = (type, id) => {
+        if (type === 'dec') {
+            const clone = JSON.parse(JSON.stringify(record))
+            for (let i = 0; i < clone?.length; i++) {
+                if (clone[i]?._id == id) {
+                    if (clone[i].amount == 0) {
+                        setNoti({
+                            isOpen: true,
+                            message: "Không thể giảm thành 0",
+                            type: "error",
+                        })
+                    }
+                    if (clone[i].amount > 0 && clone[i].amount <= clone[i].authStock) {
+                        clone[i].amount = clone[i].amount - 1
+                        const valueAmountChecked = data?.cartItems?.findIndex(option => option.bookId == id)
+                        if (valueAmountChecked !== -1) {
+                            data.cartItems[valueAmountChecked].amount = clone[i].amount
+                        }
+                    }
+                }
+            }
+            // const valueAmountChecked = bookSelect?.cartItems?.findIndex(option => option.bookId == id)
+            // if (valueAmountChecked) {
+            //   valueAmountChecked.amount = clone.cartItems[0].amount
+            // }
+            // console.log(valueAmountChecked)
+            // setBook(clone)
+            setRecord(clone)
+        }
+        if (type === 'asc') {
+            const clone = JSON.parse(JSON.stringify(record))
+            for (let i = 0; i < clone?.length; i++) {
+                if (clone[i]._id == id) {
+                    if (clone[i].amount == clone[i].authStock) {
+                        setNoti({
+                            isOpen: true,
+                            message: "Không thể vượt quá số lượng tối đa",
+                            type: "error",
+                        })
+                    }
+                    if (clone[i].amount >= 0 && clone[i].amount < clone[i].authStock) {
+                        clone[i].amount = clone[i].amount + 1
+                        console.log(data.cartItems)
+                        const valueAmountChecked = data.cartItems.findIndex(option => option.bookId == id)
+                        if (valueAmountChecked != -1) {
+                            data.cartItems[valueAmountChecked].amount = clone[i].amount
+                        }
+                    }
+                }
+            }
+
+            // setBook(clone)
+            setRecord(clone)
+        }
+    }
+
+    const bookColumns = [
+        {
+            field: "index", headerName: "STT", width: 60, align: "center"
+        },
+        { field: "_id", headerName: "Mã sách", width: 150 },
+        {
+            field: "name",
+            headerName: "Tên sách",
+            width: 250,
+            renderCell: (params) => {
+                return (
+                    <div className="cellWithImg">
+                        <img className="cellImg" src={params.row.image} alt="avatar" />
+                        {params.row.name}
+                    </div>
+                );
+            }
+        },
+
+        // {
+        //     field: "issuingcompany",
+        //     headerName: "NXB",
+        //     width: 150,
+        // },
+        {
+            field: "authStock",
+            headerName: "Tồn",
+            width: 100,
+            align: "center",
+            headerAlign: "center",
+
+        },
+        {
+            field: "auth",
+            headerName: "Số lượng",
+            width: 100,
+            headerAlign: "center",
+            align: "center",
+            renderCell: (params) => {
+                return (
+                    // <TextField
+                    // size='small'
+                    // InputProps={{ inputProps: { min: 0, max: params.row.authStock, style: { textAlign: 'center', width: "100px" } } }}
+                    // defaultValue={0}
+                    // type="number"
+                    // className="quantity"
+                    // />
+                    <>
+                        <Remove style={{ cursor: "pointer" }}
+                            onClick={() => handleQuantity("dec", params.row._id)}
+                        />
+                        <input type="number" step="1" min="0" max={params.row.authStock} defaultValue={params.row.amount} value={params.row.amount} className="quantity" />
+                        <Add style={{ cursor: "pointer" }}
+                            onClick={() => handleQuantity("asc", params.row._id)}
+                        />
+                    </>
+                );
+            }
+        },
+    ];
+
+    const actionColumn = [
+        {
+            field: "action",
+            headerName: "Thao tác",
+            width: 100,
+            renderCell: (params) => {
+                return (
+                    <div className="cellAction" key={params.row._id}>
+                        {
+                            data?.cartItems?.find(item => item.bookId === params.row._id) ?
+                                <div className="removeButton"
+                                    onClick={() => {
+                                        if (data?.cartItems) {
+                                            const dataBorrow = JSON.parse(JSON.stringify(data))
+                                            const index = data?.cartItems?.findIndex(item => item?.bookId == params.row._id)
+                                            if (index !== -1) {
+                                                dataBorrow?.cartItems.splice(index, 1)
+                                                setData(dataBorrow)
+                                            }
+                                        }
+                                    }}
+                                >
+                                    Hủy chọn
+                                </div>
+                                :
+                                <div className="addButton"
+                                    onClick={() => {
+                                        const dataBorrow = JSON.parse(JSON.stringify(data))
+                                        dataBorrow.cartItems.push({ bookId: params.row._id, amount: params.row.amount })
+                                        setData(dataBorrow)
+                                    }}
+                                >
+                                    Thêm
+                                </div>
+                        }
+
+                    </div>
+                );
+            },
+            headerAlign: "center",
+            align: "center"
+        },
+    ];
+
+    return (
+        <div className="modalBackgroundd">
+            <div className="modalContainer">
+                <div className="title">
+                    Thêm phiên mượn mới
+                </div>
+
+                <div className="body">
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        {
+                            user ?
+                                <Autocomplete
+                                    key={user._id}
+                                    disablePortal
+                                    id={user._id}
+                                    options={user}
+                                    sx={{ width: 300 }}
+                                    onChange={handleChangeAutoComplete}
+                                    renderInput={(params) => <TextField {...params} label="Giáo viên" />}
+                                />
+                                :
+                                <></>
+                        }
+
+                        <Avatar src={url} alt="" sx={{ width: 80, height: 80}} />
+                        <FormControl sx={{ marginRight: "10px", width: 300 }}
+                            variant="outlined"
+                            id="outlined-required"
+                            onChange={handleSearch}
+                        >
+                            <InputLabel htmlFor="outlined-adornment-password">Tìm kiếm tên đầu sách</InputLabel>
+                            <OutlinedInput
+                                id="outlined-adornment-password"
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            edge="end"
+                                        >
+                                            <SearchIcon />
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                                label="Tìm kiếm tên đầu sách"
+                            />
+                        </FormControl>
+                    </div>
+
+                    <form>
+                        <div className='fieldInfor'>
+                            {
+                                record ?
+                                    <DataGrid
+                                        className="datagrid"
+                                        rows={record}
+                                        sx={{ height: '300px', marginTop: "10px" }}
+                                        columns={bookColumns.concat(actionColumn)}
+                                        getRowId={(book) => book._id}
+                                        pageSize={3}
+                                        rowsPerPageOptions={[3]}
+                                        disableSelectionOnClick
+                                        disableColumnMenu
+                                    />
+                                    :
+                                    <LoadingCircle />
+                            }
+                        </div>
+                    </form>
+                    <div className="footerBorrow">
+                        <button className="confirmBorrow"
+                            onClick={() => {
+                                setOpenModal(false)
+                            }}
+                            id="cancelBtn">
+                            Đóng
+                        </button>
+                        <button className="confirmBorrow"
+                            onClick={async () => {
+                                await borrowBook(data, setNoti, setOpenModal)
+                                const userList = await getBorrowedBook(setNoti)
+                                setDataUser(userList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
+                                const cartList = await getCartAdmin(setNoti)
+                                setDataCart(cartList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
+
+                            }}
+                        >
+                            Xác nhận
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    )
+}
+
+export default PopupBorrow
