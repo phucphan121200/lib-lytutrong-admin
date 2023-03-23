@@ -11,12 +11,29 @@
     align-items: center;
     justify-content: space-between;
 
+
+
     .link {
       color: rgb(255, 255, 255);
       font-size: 16px;
       font-weight: 400;
       text-align: center;
       background-color: rgba(0, 134, 29, 0.596);
+      //border: 1px solid goldenrod;
+      padding: 5px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .linkEx {
+      color: rgb(255, 255, 255);
+      font-size: 16px;
+      font-weight: 400;
+      text-align: center;
+      background-color: rgba(109, 109, 109, 0.596);
       //border: 1px solid goldenrod;
       padding: 5px;
       border-radius: 5px;

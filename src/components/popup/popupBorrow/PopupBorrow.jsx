@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { DataGrid } from "@mui/x-data-grid";
 import "./popupBorrow.scss"
-import { getListBook, getBorrowedBook, getReturnedBook, getCartAdmin, borrowBook } from "../../../context/bookContext/apiCalls"
+import { getallStockBook, getBorrowedBook, getCartAdmin, borrowBook } from "../../../context/bookContext/apiCalls"
 import { getListUser } from "../../../context/userContext/apiCalls"
-import Moment from 'moment';
 import { Add, Remove } from "@material-ui/icons";
 import LoadingCircle from '../../loadingCircle/LoadingCircle';
 import { Avatar, TextField, Autocomplete } from '@mui/material';
@@ -28,11 +27,6 @@ const PopupBorrow = ({ setOpenModal, setNoti, setDataUser, setDataCart }) => {
         setUrl(value.image)
     };
 
-    // const handleChange = (e) => {
-    //     const value = e.target.value;
-    //     setData({ ...data, [e.target.name]: value });
-    // };
-
     const handleSearch = (e) => {
         const newData = book.filter(row => {
             return row.name.toLowerCase().includes(e.target.value.toLowerCase())
@@ -42,7 +36,7 @@ const PopupBorrow = ({ setOpenModal, setNoti, setDataUser, setDataCart }) => {
 
     useEffect(() => {
         (async () => {
-            const bookList = await getListBook(setNoti)
+            const bookList = await getallStockBook(setNoti)
             setBook(bookList?.data?.data.map((item, index, amount) => ({ ...item, index: index + 1, amount: 0 })))
             setRecord(bookList?.data?.data.map((item, index, amount) => ({ ...item, index: index + 1, amount: 0 })))
             const userList = await getListUser(setNoti)
@@ -71,12 +65,6 @@ const PopupBorrow = ({ setOpenModal, setNoti, setDataUser, setDataCart }) => {
                     }
                 }
             }
-            // const valueAmountChecked = bookSelect?.cartItems?.findIndex(option => option.bookId == id)
-            // if (valueAmountChecked) {
-            //   valueAmountChecked.amount = clone.cartItems[0].amount
-            // }
-            // console.log(valueAmountChecked)
-            // setBook(clone)
             setRecord(clone)
         }
         if (type === 'asc') {
@@ -100,8 +88,6 @@ const PopupBorrow = ({ setOpenModal, setNoti, setDataUser, setDataCart }) => {
                     }
                 }
             }
-
-            // setBook(clone)
             setRecord(clone)
         }
     }
@@ -195,8 +181,18 @@ const PopupBorrow = ({ setOpenModal, setNoti, setDataUser, setDataCart }) => {
                                 <div className="addButton"
                                     onClick={() => {
                                         const dataBorrow = JSON.parse(JSON.stringify(data))
-                                        dataBorrow.cartItems.push({ bookId: params.row._id, amount: params.row.amount })
-                                        setData(dataBorrow)
+                                        if (params.row.amount == 0) {
+                                            setNoti({
+                                                isOpen: true,
+                                                message: "Không thể thêm số lượng sách là 0",
+                                                type: "error",
+                                            })
+                                        }
+                                        else {
+                                            dataBorrow.cartItems.push({ bookId: params.row._id, amount: params.row.amount })
+                                            setData(dataBorrow)
+                                        }
+
                                     }}
                                 >
                                     Thêm
@@ -235,7 +231,7 @@ const PopupBorrow = ({ setOpenModal, setNoti, setDataUser, setDataCart }) => {
                                 <></>
                         }
 
-                        <Avatar src={url} alt="" sx={{ width: 80, height: 80}} />
+                        <Avatar src={url} alt="" sx={{ width: 80, height: 80 }} />
                         <FormControl sx={{ marginRight: "10px", width: 300 }}
                             variant="outlined"
                             id="outlined-required"

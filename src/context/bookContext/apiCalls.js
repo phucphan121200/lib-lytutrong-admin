@@ -1,9 +1,10 @@
 import axios from "axios";
+const FileDownload = require('js-file-download');
 
 const BACK_END_URL = process.env.REACT_APP_BACKEND_URL
 export const getListBook = async (setNotify) => {
     try {
-        const res = await axios.get(BACK_END_URL + "/books/getallBook", {
+        const res = await axios.get(BACK_END_URL+"/books/getallBook", {
             headers: {
                 token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
             },
@@ -13,6 +14,56 @@ export const getListBook = async (setNotify) => {
         setNotify({
             isOpen: true,
             message: "lỗi hệ thống: " + err,
+            type: "error",
+        });
+    }
+}
+
+export const getallStockBook = async (setNotify) => {
+    try {
+        const res = await axios.get(BACK_END_URL+"/books/getallStockBook", {
+            headers: {
+                token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
+            },
+        });
+        return res;
+    } catch (err) {
+        setNotify({
+            isOpen: true,
+            message: "lỗi hệ thống: " + err,
+            type: "error",
+        });
+    }
+}
+
+export const importFileBook = async (data, setNotify, setOpenModal) => {
+    const formData = new FormData();
+    formData.append("file", data)
+    try {
+        const res = await axios.post(BACK_END_URL+"/books/addFileBook", formData, {
+            headers: {
+                token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
+            },
+        });
+        if (res.data.success == true) {
+            setNotify({
+                isOpen: true,
+                message: res.data.msg,
+                type: "success",
+            });
+            setOpenModal(false)
+        }
+        if (res.data.success == false) {
+            setNotify({
+                isOpen: true,
+                message: res.data.msg,
+                type: "error",
+            });
+        }
+    } catch (err) {
+        setNotify({
+            isOpen: true,
+            message: "Lỗi hệ thống: " + err,
             type: "error",
         });
     }
@@ -231,7 +282,7 @@ export const handleDeleteBook = async (id, setNotify) => {
     } catch (err) {
         setNotify({
             isOpen: true,
-            message: "Xỗi hệ thống: " + err,
+            message: "Lỗi hệ thống: " + err,
             type: "error",
         });
     }
@@ -262,7 +313,7 @@ export const corfirmBook = async (id, data, setNotify, setOpenModal) => {
     } catch (err) {
         setNotify({
             isOpen: true,
-            message: "Xỗi hệ thống: " + err,
+            message: "Lỗi hệ thống: " + err,
             type: "error",
         });
     }
@@ -294,7 +345,7 @@ export const borrowBookinDetail = async (id, data, setNotify, setOpenModal) => {
     } catch (err) {
         setNotify({
             isOpen: true,
-            message: "Xỗi hệ thống: " + err,
+            message: "Lỗi hệ thống: " + err,
             type: "error",
         });
     }
@@ -339,7 +390,7 @@ export const getCategories = async (setNotify) => {
 
 export const createBook = async (data, setNotify, setOpenModal) => {
     try {
-        const res = await axios.post(BACK_END_URL + "/books/createBook", data, {
+        const res = await axios.post(BACK_END_URL+"/books/createBook", data, {
             headers: {
                 token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
             },
@@ -399,8 +450,26 @@ export const updateBook = async (id, data, setNotify, setOpenModal) => {
     }
 }
 
+export const exportFileBook = async (setNotify) => {
+    try {
+        const res = await axios.get(BACK_END_URL+"/books/exportFileBook", {
+            headers: {
+                token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
+            },
+            responseType: "blob"
+        }).then((response) => {
+            FileDownload(response.data, 'book-list.xlsx');
+        });
+    } catch (err) {
+        setNotify({
+            isOpen: true,
+            message: "Lỗi hệ thống: " + err,
+            type: "error",
+        });
+    }
+}
+
 export const inboundBook = async (id, data, setNotify, setOpenModal) => {
-    console.log(data)
     try {
         const res = await axios.put(BACK_END_URL + "/books/inboundBook/" + id, data, {
             headers: {
@@ -431,9 +500,40 @@ export const inboundBook = async (id, data, setNotify, setOpenModal) => {
     }
 }
 
+export const liquidBook = async (id, data, setNotify, setOpenModal) => {
+    try {
+        const res = await axios.put(BACK_END_URL+"/books/liquidBook/" + id, data, {
+            headers: {
+                token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
+            },
+        });
+        if (res.data.success == true) {
+            setNotify({
+                isOpen: true,
+                message: res.data.msg,
+                type: "success",
+            });
+            setOpenModal(false)
+        }
+        if (res.data.success == false) {
+            setNotify({
+                isOpen: true,
+                message: res.data.msg,
+                type: "error",
+            });
+        }
+    } catch (err) {
+        setNotify({
+            isOpen: true,
+            message: "Lỗi hệ thống: " + err,
+            type: "error",
+        });
+    }
+}
+
 export const returnBook = async (id, data, setNotify, setOpenModal) => {
     try {
-        const res = await axios.put(BACK_END_URL + "/carts/returnBook/" + id, data, {
+        const res = await axios.put(BACK_END_URL+"/carts/returnBook/" + id, data, {
             headers: {
                 token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
             },
@@ -464,7 +564,7 @@ export const returnBook = async (id, data, setNotify, setOpenModal) => {
 
 export const borrowBook = async (data, setNotify, setOpenModal) => {
     try {
-        const res = await axios.post(BACK_END_URL + "/carts/borrowBookAdmin", data, {
+        const res = await axios.post(BACK_END_URL+"/carts/borrowBookAdmin", data, {
             headers: {
                 token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
             },
@@ -518,7 +618,7 @@ export const cancelBook = async (id, data, setNotify, setOpenModal) => {
     } catch (err) {
         setNotify({
             isOpen: true,
-            message: "Xỗi hệ thống: " + err,
+            message: "Lỗi hệ thống: " + err,
             type: "error",
         });
     }

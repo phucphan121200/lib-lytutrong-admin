@@ -42,7 +42,7 @@ export const handleDeleteCate = async (id, setNotify) => {
     } catch (err) {
         setNotify({
             isOpen: true,
-            message: "Xỗi hệ thống: " + err,
+            message: "Lỗi hệ thống: " + err,
             type: "error",
         });
     }

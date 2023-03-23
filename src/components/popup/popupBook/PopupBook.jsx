@@ -4,7 +4,7 @@ import "./popupBook.scss"
 import Autocomplete from '@mui/material/Autocomplete';
 import { storage } from "../../../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { createBook, getListBook, updateBook, inboundBook } from "../../../context/bookContext/apiCalls"
+import { createBook, getListBook, updateBook, inboundBook, liquidBook } from "../../../context/bookContext/apiCalls"
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import ModeIcon from '@mui/icons-material/Mode';
 
@@ -82,7 +82,7 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                         name='name'
                                                         onChange={handleChange}
                                                         sx={{
-                                                            '& > :not(style)': {},
+                                                            '& > :not(style)': { marginRight: "10px" },
                                                         }}
                                                     />
                                                 </div>
@@ -95,14 +95,28 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                         name='translator'
                                                         onChange={handleChange}
                                                         sx={{
-                                                            '& > :not(style)': { marginTop: "10px" },
+                                                            '& > :not(style)': { marginRight: "10px", marginTop: "10px" },
                                                         }}
                                                     />
+                                                </div>
+                                                <div>
+                                                    <TextField
+                                                        required
+                                                        size='small'
+                                                        name='issuingcompany'
+                                                        id="outlined-required"
+                                                        label="Nhà xuất bản"
+                                                        onChange={handleChange}
+                                                        sx={{
+                                                            '& > :not(style)': { marginRight: "10px", marginTop: "10px" },
+                                                        }}
+                                                    />
+
                                                 </div>
 
                                             </div >
                                             <div className='bookImage'>
-                                                <Avatar src={url} alt="" sx={{ width: 90, height: 90, marginTop: "10px", borderRadius: 0 }} />
+                                                <Avatar src={url} alt="" sx={{ width: 90, height: 135, marginTop: "10px", borderRadius: 0 }} />
                                                 <input type="file" id='file' accept="image/png, image/jpg, image/jpeg" onChange={handleImageChange} style={{ display: 'none' }} />
                                                 {/* <button onClick={handleUpload}>Xác nhận</button> */}
                                                 <div className='fade'>
@@ -116,17 +130,6 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                             <TextField
                                                 required
                                                 size='small'
-                                                name='issuingcompany'
-                                                id="outlined-required"
-                                                label="Nhà xuất bản"
-                                                onChange={handleChange}
-                                                sx={{
-                                                    '& > :not(style)': { marginRight: "10px", marginTop: "10px" },
-                                                }}
-                                            />
-                                            <TextField
-                                                required
-                                                size='small'
                                                 name='publicationdate'
                                                 id="outlined-required"
                                                 label="Năm xuất bản"
@@ -137,34 +140,6 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                     '& > :not(style)': { marginTop: "10px" },
                                                 }}
                                             />
-                                        </div>
-                                        <div>
-                                            <TextField
-                                                required
-                                                size='small'
-                                                name='publishingcompany'
-                                                id="outlined-required"
-                                                label="Nhà phát hành"
-                                                onChange={handleChange}
-                                                sx={{
-                                                    '& > :not(style)': { marginRight: "10px", marginTop: "10px" },
-                                                }}
-                                            />
-                                            <TextField
-                                                required
-                                                size='small'
-                                                name='numberofpages'
-                                                id="outlined-required"
-                                                label="Số trang"
-                                                type={"number"}
-                                                defaultValue={0}
-                                                onChange={handleChange}
-                                                sx={{
-                                                    '& > :not(style)': { marginTop: "10px" },
-                                                }}
-                                            />
-                                        </div>
-                                        <div>
                                             <TextField
                                                 required
                                                 size='small'
@@ -175,9 +150,11 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                 defaultValue={0}
                                                 onChange={handleChange}
                                                 sx={{
-                                                    '& > :not(style)': { marginRight: "10px", marginTop: "10px" },
+                                                    '& > :not(style)': { marginLeft: "10px", marginTop: "10px" },
                                                 }}
                                             />
+                                        </div>
+                                        <div>
                                             <TextField
                                                 required
                                                 size='small'
@@ -185,6 +162,7 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                 id="outlined-required"
                                                 label="Đơn giá"
                                                 type={"number"}
+                                                fullWidth
                                                 defaultValue={0}
                                                 onChange={handleChange}
                                                 sx={{
@@ -201,7 +179,7 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                 multiple={true}
                                                 id={category._id}
                                                 value={value2}
-                                                sx={{ width: "455px", marginTop: "10px" }}
+                                                sx={{ marginTop: "10px" }}
                                                 onChange={(event, newValue) => {
                                                     setValue2([...newValue.filter((option) => fixedOptions.indexOf(option) === -1)])
                                                     setDataBook1({ ...dataBook, categoryItems: newValue.map(items => { return { categoryId: items._id } }) });
@@ -259,8 +237,6 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                             <div style={{ display: 'flex' }}>
                                                 <div style={{ marginTop: "10px" }}>
                                                     <div>
-
-
                                                         <TextField
                                                             required
                                                             size='small'
@@ -269,6 +245,9 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                             name='name'
                                                             defaultValue={data.name}
                                                             onChange={handleChange}
+                                                            sx={{
+                                                                '& > :not(style)': { marginRight: "10px" },
+                                                            }}
                                                         />
                                                     </div>
                                                     <div>
@@ -281,13 +260,28 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                             defaultValue={data.translator}
                                                             onChange={handleChange}
                                                             sx={{
-                                                                '& > :not(style)': { marginTop: "10px" },
+                                                                '& > :not(style)': { marginRight: "10px", marginTop: "10px" },
                                                             }}
                                                         />
                                                     </div>
+                                                    <div>
+                                                        <TextField
+                                                            required
+                                                            size='small'
+                                                            name='issuingcompany'
+                                                            id="outlined-required"
+                                                            label="Nhà xuất bản"
+                                                            defaultValue={data.issuingcompany}
+                                                            onChange={handleChange}
+                                                            sx={{
+                                                                '& > :not(style)': { marginRight: "10px", marginTop: "10px" },
+                                                            }}
+                                                        />
+
+                                                    </div>
                                                 </div >
                                                 <div className='bookImage'>
-                                                    <Avatar src={url} alt="" sx={{ width: 90, height: 90, marginTop: "10px", borderRadius: 0 }} />
+                                                    <Avatar src={url} alt="" sx={{ width: 90, height: 135, marginTop: "10px", borderRadius: 0 }} />
                                                     <input type="file" id='file' accept="image/png, image/jpg, image/jpeg" onChange={handleImageChange} style={{ display: 'none' }} />
                                                     {/* <button onClick={handleUpload}>Xác nhận</button> */}
                                                     <div className='fade'>
@@ -297,19 +291,8 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                     </label>
                                                 </div>
                                             </div>
+
                                             <div>
-                                                <TextField
-                                                    required
-                                                    size='small'
-                                                    name='issuingcompany'
-                                                    id="outlined-required"
-                                                    label="Nhà xuất bản"
-                                                    defaultValue={data.issuingcompany}
-                                                    onChange={handleChange}
-                                                    sx={{
-                                                        '& > :not(style)': { marginRight: "10px", marginTop: "10px" },
-                                                    }}
-                                                />
                                                 <TextField
                                                     required
                                                     size='small'
@@ -320,36 +303,36 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                     onChange={handleChange}
                                                     sx={{
                                                         '& > :not(style)': { marginTop: "10px" },
-                                                    }}
-                                                />
-                                            </div>
-                                            <div>
-                                                <TextField
-                                                    required
-                                                    size='small'
-                                                    name='publishingcompany'
-                                                    id="outlined-required"
-                                                    label="Nhà phát hành"
-                                                    defaultValue={data.publishingcompany}
-                                                    onChange={handleChange}
-                                                    sx={{
-                                                        '& > :not(style)': { marginRight: "10px", marginTop: "10px" },
+                                                        
                                                     }}
                                                 />
                                                 <TextField
                                                     required
                                                     size='small'
-                                                    name='numberofpages'
+                                                    name='stock'
                                                     id="outlined-required"
-                                                    label="Số trang"
-                                                    defaultValue={data.numberofpages}
+                                                    label="Vật lý"
+                                                    disabled
+                                                    defaultValue={data.stock}
                                                     onChange={handleChange}
                                                     sx={{
-                                                        '& > :not(style)': { marginTop: "10px" },
+                                                        '& > :not(style)': { marginLeft: "10px", marginTop: "10px"},
                                                     }}
                                                 />
                                             </div>
                                             <div>
+                                            <TextField
+                                                    required
+                                                    size='small'
+                                                    name='price'
+                                                    id="outlined-required"
+                                                    label="Đơn giá"
+                                                    defaultValue={data.price}
+                                                    onChange={handleChange}
+                                                    sx={{
+                                                        '& > :not(style)': { marginTop: "10px", marginRight: "10px",},
+                                                    }}
+                                                />
                                                 <TextField
                                                     required
                                                     size='small'
@@ -363,31 +346,21 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                         '& > :not(style)': { marginRight: "10px", marginTop: "10px", width: "106px" },
                                                     }}
                                                 />
+                                                
                                                 <TextField
                                                     required
                                                     size='small'
                                                     name='stock'
                                                     id="outlined-required"
-                                                    label="Vật lý"
+                                                    label="Thanh lý"
                                                     disabled
-                                                    defaultValue={data.stock}
+                                                    defaultValue={data.liquid}
                                                     onChange={handleChange}
                                                     sx={{
-                                                        '& > :not(style)': { marginRight: "10px", marginTop: "10px", width: "107px" },
+                                                        '& > :not(style)': { marginTop: "10px", width: "105px" },
                                                     }}
                                                 />
-                                                <TextField
-                                                    required
-                                                    size='small'
-                                                    name='price'
-                                                    id="outlined-required"
-                                                    label="Đơn giá"
-                                                    defaultValue={data.price}
-                                                    onChange={handleChange}
-                                                    sx={{
-                                                        '& > :not(style)': { marginTop: "10px" },
-                                                    }}
-                                                />
+                                                
                                             </div>
 
                                             {
@@ -396,7 +369,7 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                         multiple={true}
                                                         id={category._id}
                                                         value={value2}
-                                                        sx={{ width: "455px", marginTop: "10px" }}
+                                                        sx={{ marginTop: "10px" }}
                                                         onChange={(event, newValue) => {
                                                             setValue2([...newValue.filter((option) => fixedOptions.indexOf(option) === -1)])
                                                             setDataBook1({ ...dataBook, categoryItems: newValue.map(items => { return { categoryId: items._id } }) });
@@ -440,44 +413,84 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                 </div>
                             </>
                             :
-                            <>
-                                <div className="title">
-                                    Nhập sách vào thư viện
-                                </div>
-                                <div className="bodystock">
-                                    <Avatar src={url} alt="" sx={{ width: 150, height: 150, borderRadius: 0 }} />
-                                    <form style={{ marginLeft: "10px" }}>
-                                        <div className='fieldInfor'>
-                                            <h2>{data.name} - {data.translator}</h2>
-                                            <TextField
-                                                required
-                                                size='small'
-                                                name='stock'
-                                                sx={{ marginTop: "10px" }}
-                                                id="outlined-required"
-                                                label="Số lượng sách nhập"
-                                                type="number"
-                                                // defaultValue={0}
-                                                onChange={handleChange}
-                                            />
-                                        </div>
-                                    </form>
-                                </div>
-                                <div className="footer">
-                                    <button className="deleteButton"
-                                        id='cancelBtn'
-                                        onClick={() => {
-                                            setOpenModal(false)
-                                        }}>Đóng</button>
-                                    <button className="editButton"
-                                        onClick={async () => {
-                                            await inboundBook(data._id, dataBook, setNoti, setOpenModal)
-                                            const bookList = await getListBook(setNoti)
-                                            setDataBook(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
-                                        }}>Xác nhận</button>
+                            createUpdate == 3 ?
+                                <>
+                                    <div className="title">
+                                        Nhập sách vào thư viện
+                                    </div>
+                                    <div className="bodystock">
+                                        <Avatar src={url} alt="" sx={{ width: 150, height: 200, borderRadius: 2}} />
+                                        <form style={{ marginLeft: "10px" }}>
+                                            <div className='fieldInfor'>
+                                                <h2>{data.name} - {data.translator}</h2>
+                                                <TextField
+                                                    required
+                                                    size='small'
+                                                    name='stock'
+                                                    sx={{ marginTop: "10px" }}
+                                                    id="outlined-required"
+                                                    label="Số lượng sách nhập"
+                                                    type="number"
+                                                    // defaultValue={0}
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div className="footer">
+                                        <button className="deleteButton"
+                                            id='cancelBtn'
+                                            onClick={() => {
+                                                setOpenModal(false)
+                                            }}>Đóng</button>
+                                        <button className="editButton"
+                                            onClick={async () => {
+                                                await inboundBook(data._id, dataBook, setNoti, setOpenModal)
+                                                const bookList = await getListBook(setNoti)
+                                                setDataBook(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
+                                            }}>Xác nhận</button>
 
-                                </div>
-                            </>
+                                    </div>
+                                </>
+                                :
+                                <>
+                                    <div className="title">
+                                        Thanh lý sách
+                                    </div>
+                                    <div className="bodystock">
+                                        <Avatar src={url} alt="" sx={{ width: 150, height: 200, borderRadius: 2 }} />
+                                        <form style={{ marginLeft: "10px" }}>
+                                            <div className='fieldInfor'>
+                                                <h2>{data.name} - {data.translator}</h2>
+                                                <TextField
+                                                    required
+                                                    size='small'
+                                                    name='stock'
+                                                    sx={{ marginTop: "10px" }}
+                                                    id="outlined-required"
+                                                    label="Số lượng thanh lý"
+                                                    type="number"
+                                                    // defaultValue={0}
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div className="footer">
+                                        <button className="deleteButton"
+                                            id='cancelBtn'
+                                            onClick={() => {
+                                                setOpenModal(false)
+                                            }}>Đóng</button>
+                                        <button className="liquidButton"
+                                            onClick={async () => {
+                                                await liquidBook(data._id, dataBook, setNoti, setOpenModal)
+                                                const bookList = await getListBook(setNoti)
+                                                setDataBook(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
+                                            }}>Thanh lý</button>
+
+                                    </div>
+                                </>
                 }
             </div>
         </div>

@@ -10,31 +10,52 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-
-        .link {
-            color: rgb(255, 255, 255);
-            font-size: 16px;
-            font-weight: 400;
-            text-align: center;
-            background-color: rgba(0, 134, 29, 0.596);
-            //border: 1px solid goldenrod;
-            padding: 5px;
-            border-radius: 5px;
-            cursor: pointer;
-
-        }
     }
+
+
+    .link {
+        color: rgb(255, 255, 255);
+        font-size: 16px;
+        font-weight: 400;
+        display: flex;
+        align-items: center;
+        background-color: rgba(0, 134, 29, 0.596);
+        //border: 1px solid goldenrod;
+        padding: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+
+    }
+
+    .linkEx {
+        color: rgb(255, 255, 255);
+        font-size: 16px;
+        font-weight: 400;
+        text-align: center;
+        background-color: rgba(109, 109, 109, 0.596);
+        //border: 1px solid goldenrod;
+        padding: 5px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+    }
+
     .get-red {
         background-color: rgba(252, 81, 78, 0.596);
-        &:hover{
+
+        &:hover {
             background-color: rgba(107, 36, 35, 0.596);
         }
-        
+
     }
+
     // .get-red :hover {
     //     background-color: rgba(107, 36, 35, 0.596);
     // }
-    
+
 
     .modal {
         display: flex;
@@ -89,6 +110,16 @@
             border-radius: 5px;
             color: rgb(255, 255, 255);
             background-color: rgba(5, 5, 207, 0.7);
+            //border: 1px solid rgba(0, 0, 139, 0.596)
+            ;
+            cursor: pointer;
+        }
+
+        .liquidButton {
+            padding: 2px 5px;
+            border-radius: 5px;
+            color: rgb(255, 255, 255);
+            background-color: rgba(0, 166, 185, 0.7);
             //border: 1px solid rgba(0, 0, 139, 0.596)
             ;
             cursor: pointer;

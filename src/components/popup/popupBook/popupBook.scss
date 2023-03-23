@@ -22,7 +22,7 @@
 
     .title {
         display: inline-block;
-        text-align: center;
+        text-align: start;
         font-size: 25px;
         font-weight: bolder;
         margin-top: 20px;
@@ -57,7 +57,7 @@
                     background-color: rgba(0, 0, 0, 0.35);
                     position: absolute;
                     width: 90px;
-                    height: 90px;
+                    height: 135px;
                     // margin-left: 80px;
                     margin-top: 10px;
                     z-index: 100;
@@ -114,6 +114,17 @@
             border: none;
             color: rgb(255, 255, 255);
             background-color: rgba(0, 134, 29, 0.8);
+            border-radius: 5px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        .liquidButton{
+            width: 100px;
+            height: 40px;
+            // margin: 10px;
+            border: none;
+            color: rgb(255, 255, 255);
+            background-color: rgba(188, 36, 36, 0.8);
             border-radius: 5px;
             font-size: 15px;
             cursor: pointer;

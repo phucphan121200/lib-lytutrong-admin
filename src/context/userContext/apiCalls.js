@@ -1,4 +1,5 @@
 import axios from "axios";
+const FileDownload = require('js-file-download');
 
 const BACK_END_URL = process.env.REACT_APP_BACKEND_URL
 export const getListUser = async (setNotify) => {
@@ -9,6 +10,58 @@ export const getListUser = async (setNotify) => {
             },
         });
         return res;
+    } catch (err) {
+        setNotify({
+            isOpen: true,
+            message: "Lỗi hệ thống: " + err,
+            type: "error",
+        });
+    }
+}
+
+export const exportFileUser = async (setNotify) => {
+    try {
+        const res = await axios.get(BACK_END_URL+"/users/exportFileUser", {
+            headers: {
+                token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
+            },
+            responseType: "blob"
+        }).then((response) => {
+            FileDownload(response.data, 'user-list.xlsx');
+        });
+    } catch (err) {
+        setNotify({
+            isOpen: true,
+            message: "Lỗi hệ thống: " + err,
+            type: "error",
+        });
+    }
+}
+
+export const importFileUser = async (data, setNotify, setOpenModal) => {
+    const formData = new FormData();
+    formData.append("file", data)
+    try {
+        const res = await axios.post(BACK_END_URL+"/users/addFileUser", formData, {
+            headers: {
+                token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
+            },
+        });
+        if (res.data.success == true) {
+            setNotify({
+                isOpen: true,
+                message: res.data.msg,
+                type: "success",
+            });
+            setOpenModal(false)
+        }
+        if (res.data.success == false) {
+            setNotify({
+                isOpen: true,
+                message: res.data.msg,
+                type: "error",
+            });
+        }
     } catch (err) {
         setNotify({
             isOpen: true,

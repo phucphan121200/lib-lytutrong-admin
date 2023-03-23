@@ -97,6 +97,7 @@ const Single = () => {
     return;
   }, [])
 
+  console.log(userCart)
   const handleSearch = (e) => {
     const newAll = userCartItems.filter(row => {
       return row.bookId.name.toLowerCase().includes(e.target.value.toLowerCase())
@@ -458,7 +459,7 @@ const Single = () => {
       <div className="singleContainer">
         <Navbar />
         {
-          userCart ?
+          userCart.length !=0 ?
             <>
               <div className="top">
                 <div className="left">
@@ -468,34 +469,33 @@ const Single = () => {
                     userCart ?
                       <div className="item">
                         <img
-                          src={userCart.userBorrowInfo.image}
+                          src={userCart?.userBorrowInfo?.image}
                           alt=""
                           className="itemImg"
                         />
                         <div className="details">
-                          <h1 className="itemTitle">{userCart.userBorrowInfo.name + " "}
+                          <h1 className="itemTitle">{userCart?.userBorrowInfo?.name + " "}
                             <Tooltip title="Người này là quản trị viên" arrow>
                               {
-                                userCart.userBorrowInfo.isAdmin == true ?
+                                userCart?.userBorrowInfo?.isAdmin == true ?
                                   <CheckCircleIcon className="icon" />
                                   :
                                   <></>
                               }
-
                             </Tooltip>
                           </h1>
                           <div className="detailItem">
                             <span className="itemKey">Email:</span>
-                            <span className="itemValue">{userCart.userBorrowInfo.email}</span>
+                            <span className="itemValue">{userCart?.userBorrowInfo?.email}</span>
                           </div>
                           <div className="detailItem">
                             <span className="itemKey">Điện thoại:</span>
-                            <span className="itemValue">{userCart.userBorrowInfo.phone}</span>
+                            <span className="itemValue">{userCart?.userBorrowInfo?.phone}</span>
                           </div>
                           <div className="detailItem">
                             <span className="itemKey">Ngày tạo:</span>
                             <span className="itemValue">
-                              {moment(userCart.userBorrowInfo.createdAt).format("HH:mm:ss, DD/MM/YYYY")}
+                              {moment(userCart?.userBorrowInfo?.createdAt).format("HH:mm:ss, DD/MM/YYYY")}
                             </span>
                           </div>
                           {/* <div className="detailItem">

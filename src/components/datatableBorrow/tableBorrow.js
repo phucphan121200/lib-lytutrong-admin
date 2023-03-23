@@ -117,7 +117,7 @@ export const allColumns = [
     {
         field: "index", headerName: "STT", width: 60, align: "center"
     },
-    { field: "_id", headerName: "Mã phiên", width: 100 },
+    // { field: "_id", headerName: "Mã phiên", width: 100 },
     {
         field: "name",
         headerName: "Người mượn",

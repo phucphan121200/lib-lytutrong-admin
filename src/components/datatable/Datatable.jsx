@@ -2,7 +2,7 @@ import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { getListUser, handleChangeRole, handleDelete } from "../../context/userContext/apiCalls"
+import { getListUser, handleChangeRole, handleDelete, exportFileUser } from "../../context/userContext/apiCalls"
 import LoadingCircle from "../../components/loadingCircle/LoadingCircle";
 import { Button, Select, Switch } from "antd";
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
@@ -17,6 +17,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
+import PopupUpload from "../popup/popupUpload/PopupUpload";
 
 const Datatable = () => {
 
@@ -24,6 +25,7 @@ const Datatable = () => {
   const [idUser, setIdUser] = useState("")
   const [modalOpen, setModalOpen] = useState(false);
   const [modalUpdate, setModalUpdate] = useState(false);
+  const [modalUpload, setModalUpload] = useState(false);
   const [createUpdate, setCreateUpdate] = useState(0);
   const [notify, setNotify] = useState({
     isOpen: false,
@@ -53,11 +55,11 @@ const Datatable = () => {
     {
       field: "index", headerName: "STT", width: 60, align: "center"
     },
-    { field: "_id", headerName: "Mã người dùng", width: 150 },
+    { field: "userId", headerName: "Mã người dùng", width: 150 },
     {
       field: "name",
       headerName: "Người dùng",
-      width: 250,
+      width: 230,
       renderCell: (params) => {
         return (
           <div className="cellWithImg">
@@ -70,19 +72,24 @@ const Datatable = () => {
     {
       field: "phone",
       headerName: "SĐT",
-      width: 120,
+      width: 110,
     },
     {
       field: "isAdmin",
       headerName: "Quản trị",
-      width: 100,
+      width: 110,
       renderCell: (params) => {
         return (
           <Switch
             checkedChildren={<CheckOutlined />}
             unCheckedChildren={<CloseOutlined />}
             defaultChecked={params.row.isAdmin}
-            onChange={(value) => handleChangeRole(params.row._id, value, setNotify)}
+            onChange={async (value) => {
+              await handleChangeRole(params.row._id, value, setNotify)
+              const userList = await getListUser(setNotify)
+              setDataUser(userList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
+              setRecord(userList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
+            }}
           // onClick={
           //   !params.row.isAdmin
           // }
@@ -94,7 +101,7 @@ const Datatable = () => {
     {
       field: "createdAt",
       headerName: "Thời gian tạo",
-      width: 180,
+      width: 170,
       renderCell: (params) => {
         return (
           Moment(params.row.createdAt).format('HH:mm:ss, DD/MM/YYYY')
@@ -104,7 +111,7 @@ const Datatable = () => {
     {
       field: "updatedAt",
       headerName: "Thời gian sửa",
-      width: 180,
+      width: 170,
       renderCell: (params) => {
         return (
           Moment(params.row.updatedAt).format('HH:mm:ss, DD/MM/YYYY')
@@ -129,7 +136,7 @@ const Datatable = () => {
     {
       field: "action",
       headerName: "Thao tác",
-      width: 200,
+      width: 130,
       renderCell: (params) => {
         return (
           <div className="cellAction">
@@ -167,13 +174,18 @@ const Datatable = () => {
       <div className="datatableTitle">
         Danh sách người dùng
         <div style={{ display: "flex" }}>
-          {/* <TextField
-            size="small"
-            label="Tìm kiếm tên người dùng"
-            onChange={handleSearch}
-            style={{ marginRight: "10px" }}
-          ></TextField> */}
-          <FormControl size="small" sx={{ marginRight: "10px"}}
+          <div className="link" style={{ marginRight: "10px" }} onClick={() => {
+            setModalUpload(true)
+            setCreateUpdate(1)
+          }}>
+            Thêm dữ liệu
+          </div>
+          <div className="linkEx" style={{ marginRight: "10px" }} onClick={() => {
+            exportFileUser(setNotify)
+          }}>
+            Xuất dữ liệu
+          </div>
+          <FormControl size="small" sx={{ marginRight: "10px" }}
             variant="outlined"
             id="outlined-required"
             onChange={handleSearch}
@@ -200,7 +212,6 @@ const Datatable = () => {
           }}>
             Thêm mới
           </div>
-
         </div>
 
       </div>
@@ -238,7 +249,14 @@ const Datatable = () => {
             setDataUser={setRecord}
           />}
       </div>
-
+      <div className="modalupdate">
+        {modalUpload &&
+          <PopupUpload setOpenModal={setModalUpload}
+            setNoti={setNotify}
+            isPopup={1}
+            setDataUser={setRecord}
+          />}
+      </div>
       <Notification
         notify={notify}
         setNotify={setNotify}

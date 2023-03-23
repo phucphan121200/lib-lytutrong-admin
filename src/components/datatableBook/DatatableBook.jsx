@@ -2,7 +2,7 @@ import "./datatableBook.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { getListBook } from "../../context/bookContext/apiCalls"
+import { getListBook, exportFileBook } from "../../context/bookContext/apiCalls"
 import LoadingCircle from "../../components/loadingCircle/LoadingCircle";
 import { Button, Select, Switch } from "antd";
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
@@ -18,6 +18,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
+import PopupUpload from "../popup/popupUpload/PopupUpload";
 
 const DatatableBook = () => {
 
@@ -25,6 +26,7 @@ const DatatableBook = () => {
     const [idBook, setIdBook] = useState("")
     const [modalOpen, setModalOpen] = useState(false);
     const [modalUpdate, setModalUpdate] = useState(false);
+    const [modalUpload, setModalUpload] = useState(false);
     const [createUpdate, setCreateUpdate] = useState(0);
     const [category, setCate] = useState("")
     const [notify, setNotify] = useState({
@@ -57,11 +59,11 @@ const DatatableBook = () => {
         {
             field: "index", headerName: "STT", width: 60, align: "center"
         },
-        { field: "_id", headerName: "Mã sách", width: 150 },
+        { field: "bookId", headerName: "Mã sách", width: 100 },
         {
             field: "name",
             headerName: "Tên sách",
-            width: 250,
+            width: 220,
             renderCell: (params) => {
                 return (
                     <div className="cellWithImg">
@@ -71,34 +73,10 @@ const DatatableBook = () => {
                 );
             }
         },
-        // {
-        //   field: "issuingcompany",
-        //   headerName: "NXB",
-        //   width: 120,
-        // },
-        // {
-        //     field: "publicationdate",
-        //     headerName: "Năm X.bản",
-        //     width: 120,
-        //     //   renderCell: (params) => {
-        //     //     return (
-        //     //       <Switch
-        //     //         checkedChildren={<CheckOutlined />}
-        //     //         unCheckedChildren={<CloseOutlined />}
-        //     //         defaultChecked={params.row.isAdmin}
-        //     //         onChange={(value) => handleChangeRole(params.row.id, value, setNotify)}
-        //     //       // onClick={
-        //     //       //   !params.row.isAdmin
-        //     //       // }
-        //     //       />
-        //     //     );
-        //     //   },
-        //     align: "center"
-        // },
         {
             field: "authStock",
             headerName: "Tồn khả dụng",
-            width: 120,
+            width: 125,
             align: "center",
             headerAlign: "center",
 
@@ -106,6 +84,14 @@ const DatatableBook = () => {
         {
             field: "stock",
             headerName: "Tồn vật lý",
+            width: 100,
+            align: "center",
+            headerAlign: "center",
+
+        },
+        {
+            field: "liquid",
+            headerName: "Thanh lý",
             width: 100,
             align: "center",
             headerAlign: "center",
@@ -137,7 +123,7 @@ const DatatableBook = () => {
         {
             field: "action",
             headerName: "Thao tác",
-            width: 220,
+            width: 300,
             renderCell: (params) => {
                 return (
                     <div className="cellAction">
@@ -159,6 +145,16 @@ const DatatableBook = () => {
                             Cập nhật
                         </div>
                         <div
+                            className="liquidButton"
+                            onClick={() => {
+                                setModalUpdate(true)
+                                setIdBook(params.row)
+                                setCreateUpdate(4)
+                            }}
+                        >
+                            Thanh lý
+                        </div>
+                        <div
                             className="deleteButton"
                             onClick={() => {
                                 setModalOpen(true)
@@ -177,14 +173,23 @@ const DatatableBook = () => {
     return (
         <div className="datatablee">
             <div className="datatableTitle">
-                Danh sách đầu sách
+            Danh sách đầu sách
                 <div style={{ display: "flex" }}>
-                    {/* <TextField
-                        size="small"
-                        label="Tìm kiếm tên đầu sách"
-                        onChange={handleSearch}
-                        style={{ marginRight: "10px" }}
-                    ></TextField> */}
+                    <div className="link" style={{ marginRight: "10px" }}
+                        onClick={() => {
+                            setModalUpload(true)
+                            setCreateUpdate(1)
+                        }}
+                    >
+                        Thêm dữ liệu
+                    </div>
+                    <div className="linkEx" style={{ marginRight: "10px" }}
+                        onClick={() => {
+                            exportFileBook(setNotify)
+                        }}
+                    >
+                        Xuất dữ liệu
+                    </div>
                     <FormControl size="small" sx={{ marginRight: "10px" }}
                         variant="outlined"
                         id="outlined-required"
@@ -253,7 +258,15 @@ const DatatableBook = () => {
                         setNoti={setNotify}
                         setDataBook={setRecord}
                     />}
+                {modalUpload &&
+                    <PopupUpload
+                        setOpenModal={setModalUpload}
+                        setNoti={setNotify}
+                        isPopup={2}
+                        setDataUser={setRecord}
+                    />}
             </div>
+
 
             <Notification
                 notify={notify}
