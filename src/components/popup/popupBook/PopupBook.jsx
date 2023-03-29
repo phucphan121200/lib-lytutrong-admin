@@ -103,17 +103,17 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                     <TextField
                                                         required
                                                         size='small'
-                                                        name='issuingcompany'
+                                                        name='publicationdate'
                                                         id="outlined-required"
-                                                        label="Nhà xuất bản"
+                                                        label="Năm xuất bản"
+                                                        type={"number"}
+                                                        defaultValue={0}
                                                         onChange={handleChange}
                                                         sx={{
                                                             '& > :not(style)': { marginRight: "10px", marginTop: "10px" },
                                                         }}
                                                     />
-
                                                 </div>
-
                                             </div >
                                             <div className='bookImage'>
                                                 <Avatar src={url} alt="" sx={{ width: 90, height: 135, marginTop: "10px", borderRadius: 0 }} />
@@ -130,9 +130,9 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                             <TextField
                                                 required
                                                 size='small'
-                                                name='publicationdate'
+                                                name='price'
                                                 id="outlined-required"
-                                                label="Năm xuất bản"
+                                                label="Đơn giá"
                                                 type={"number"}
                                                 defaultValue={0}
                                                 onChange={handleChange}
@@ -151,22 +151,6 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                 onChange={handleChange}
                                                 sx={{
                                                     '& > :not(style)': { marginLeft: "10px", marginTop: "10px" },
-                                                }}
-                                            />
-                                        </div>
-                                        <div>
-                                            <TextField
-                                                required
-                                                size='small'
-                                                name='price'
-                                                id="outlined-required"
-                                                label="Đơn giá"
-                                                type={"number"}
-                                                fullWidth
-                                                defaultValue={0}
-                                                onChange={handleChange}
-                                                sx={{
-                                                    '& > :not(style)': { marginTop: "10px" },
                                                 }}
                                             />
                                         </div>
@@ -268,16 +252,16 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                         <TextField
                                                             required
                                                             size='small'
-                                                            name='issuingcompany'
+                                                            name='publicationdate'
                                                             id="outlined-required"
-                                                            label="Nhà xuất bản"
-                                                            defaultValue={data.issuingcompany}
+                                                            label="Năm xuất bản"
+                                                            defaultValue={data.publicationdate}
                                                             onChange={handleChange}
                                                             sx={{
                                                                 '& > :not(style)': { marginRight: "10px", marginTop: "10px" },
+
                                                             }}
                                                         />
-
                                                     </div>
                                                 </div >
                                                 <div className='bookImage'>
@@ -296,14 +280,13 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                 <TextField
                                                     required
                                                     size='small'
-                                                    name='publicationdate'
+                                                    name='price'
                                                     id="outlined-required"
-                                                    label="Năm xuất bản"
-                                                    defaultValue={data.publicationdate}
+                                                    label="Đơn giá"
+                                                    defaultValue={data.price}
                                                     onChange={handleChange}
                                                     sx={{
-                                                        '& > :not(style)': { marginTop: "10px" },
-                                                        
+                                                        '& > :not(style)': { marginTop: "10px", marginRight: "10px", },
                                                     }}
                                                 />
                                                 <TextField
@@ -316,23 +299,12 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                     defaultValue={data.stock}
                                                     onChange={handleChange}
                                                     sx={{
-                                                        '& > :not(style)': { marginLeft: "10px", marginTop: "10px"},
+                                                        '& > :not(style)': { marginTop: "10px" },
                                                     }}
                                                 />
                                             </div>
                                             <div>
-                                            <TextField
-                                                    required
-                                                    size='small'
-                                                    name='price'
-                                                    id="outlined-required"
-                                                    label="Đơn giá"
-                                                    defaultValue={data.price}
-                                                    onChange={handleChange}
-                                                    sx={{
-                                                        '& > :not(style)': { marginTop: "10px", marginRight: "10px",},
-                                                    }}
-                                                />
+
                                                 <TextField
                                                     required
                                                     size='small'
@@ -343,10 +315,10 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                     defaultValue={data.authStock}
                                                     onChange={handleChange}
                                                     sx={{
-                                                        '& > :not(style)': { marginRight: "10px", marginTop: "10px", width: "106px" },
+                                                        '& > :not(style)': { marginRight: "10px", marginTop: "10px"},
                                                     }}
                                                 />
-                                                
+
                                                 <TextField
                                                     required
                                                     size='small'
@@ -357,10 +329,10 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                     defaultValue={data.liquid}
                                                     onChange={handleChange}
                                                     sx={{
-                                                        '& > :not(style)': { marginTop: "10px", width: "105px" },
+                                                        '& > :not(style)': { marginTop: "10px"},
                                                     }}
                                                 />
-                                                
+
                                             </div>
 
                                             {
@@ -419,7 +391,7 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                         Nhập sách vào thư viện
                                     </div>
                                     <div className="bodystock">
-                                        <Avatar src={url} alt="" sx={{ width: 150, height: 200, borderRadius: 2}} />
+                                        <Avatar src={url} alt="" sx={{ width: 150, height: 200, borderRadius: 2 }} />
                                         <form style={{ marginLeft: "10px" }}>
                                             <div className='fieldInfor'>
                                                 <h2>{data.name} - {data.translator}</h2>

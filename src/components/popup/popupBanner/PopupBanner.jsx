@@ -127,7 +127,7 @@ const PopupBanner = ({ setOpenModal, createUpdate, category, data, setNoti, setD
                         createUpdate == 2 ?
                             <>
                                 <div className="title">
-                                    Thông tin thể loại
+                                    Thông tin banner
                                 </div>
                                 <div className="body">
                                     <form>
@@ -139,7 +139,7 @@ const PopupBanner = ({ setOpenModal, createUpdate, category, data, setNoti, setD
                                                             required
                                                             size='small'
                                                             id="outlined-required"
-                                                            label="Tên thể loại"
+                                                            label="Tên banner"
                                                             name='name'
                                                             defaultValue={data.name}
                                                             onChange={handleChange}
