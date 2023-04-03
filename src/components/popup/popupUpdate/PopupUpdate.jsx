@@ -148,7 +148,20 @@ const Popup = ({ setOpenModal, data, setNoti, createUpdate, setDataUser }) => {
 
                                         />
                                     </div>
+                                    <div>
+                                        <TextField
+                                            required
+                                            size='small'
+                                            id="outlined-required"
+                                            label="CCCD/ Mã định danh"
+                                            name='idcard'
+                                            onChange={handleChange}
+                                            sx={{
+                                                '& > :not(style)': { marginLeft: "10px", width: '25ch', marginTop: "10px" },
+                                            }}
 
+                                        />
+                                    </div>
                                     <div>
                                         <TextField
                                             required
@@ -168,7 +181,7 @@ const Popup = ({ setOpenModal, data, setNoti, createUpdate, setDataUser }) => {
                                                 unCheckedChildren={<CloseOutlined />}
                                                 defaultChecked={false}
                                                 onChange={handleChangeSwitch}
-                                                style={{ marginLeft: "10px", marginTop: "10px" }}
+                                                style={{ marginLeft: "10px", marginTop: "10px", marginBottom: "10px" }}
                                             />
                                         </div>
 

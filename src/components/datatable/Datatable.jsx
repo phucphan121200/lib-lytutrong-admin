@@ -70,6 +70,11 @@ const Datatable = () => {
       }
     },
     {
+      field: "idcard",
+      headerName: "CCCD/ Mã định danh",
+      width: 170,
+    },
+    {
       field: "phone",
       headerName: "SĐT",
       width: 110,

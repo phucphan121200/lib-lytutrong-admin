@@ -7,7 +7,7 @@ import "./login.scss";
 import Notification from "../../components/alert/Notification";
 
 const Login=()=>{
-    const [phone, setPhone] = useState("");
+    const [idcard, setIdCard] = useState("");
     const [password, setPassword] = useState("");
     const { isFetching, dispatch } = useContext(AuthContext);
     const [notify, setNotify] = useState({
@@ -17,7 +17,7 @@ const Login=()=>{
     });
     const handleLogin = (e) => {
         e.preventDefault();
-        login({ phone, password }, dispatch, setNotify);
+        login({ idcard, password }, dispatch, setNotify);
       };
     const paperStyle={display:"flex", flexDirection: "column", padding : 50, width:280 }
     const avatarStyle={backgroundColor:'#1bbd7e'}
@@ -29,7 +29,7 @@ const Login=()=>{
                      <Avatar style={avatarStyle}><LockOutlinedIcon/></Avatar>
                     <h2>Đăng nhập</h2>
                 </Grid>
-                <TextField label='Số điện thoại' placeholder='Nhập số điện thoại' fullWidth required onChange={(e) => setPhone(e.target.value)}/>
+                <TextField label='CCDD hoặc Mã định danh' placeholder='Nhập số CCDD hoặc Mã định danh' fullWidth required onChange={(e) => setIdCard(e.target.value)}/>
                 <TextField label='Mật khẩu' placeholder='Nhập mật khẩu' type='password' fullWidth required onChange={(e) => setPassword(e.target.value)}/>
                 <Button type='submit' variant="contained" style={btnstyle} fullWidth onClick={handleLogin} disabled={isFetching}>Đăng nhập</Button>
             </Paper>
