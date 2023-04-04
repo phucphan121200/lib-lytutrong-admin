@@ -28,8 +28,8 @@ const PopupUserInfo = ({ setOpenModal, user, setNoti }) => {
     };
     const [password, setPassword] = useState("");
     const { isFetching, dispatch } = useContext(AuthContext);
-    const [userdata, setUserData] = useState(user.user)
-    const [url, setUrl] = useState(user.user.image)
+    const [userdata, setUserData] = useState(user)
+    const [url, setUrl] = useState(user.image)
     const [image, setImage] = useState(null)
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordNew, setShowPasswordNew] = useState(false);
@@ -116,7 +116,7 @@ const PopupUserInfo = ({ setOpenModal, user, setNoti }) => {
                                                 id="outlined-required"
                                                 label="Họ và Tên"
                                                 name='name'
-                                                defaultValue={user.user.name}
+                                                defaultValue={user.name}
                                                 onChange={handleChange}
                                                 sx={{
                                                     '& > :not(style)': { marginLeft: "20px", width: "160px" },
@@ -130,7 +130,7 @@ const PopupUserInfo = ({ setOpenModal, user, setNoti }) => {
                                                 id="outlined-required"
                                                 label="Số điện thoại"
                                                 name='phone'
-                                                defaultValue={user.user.phone}
+                                                defaultValue={user.phone}
                                                 onChange={handleChange}
                                                 sx={{
                                                     '& > :not(style)': { marginLeft: "20px", marginTop: "30px", width: "160px" },
@@ -153,7 +153,7 @@ const PopupUserInfo = ({ setOpenModal, user, setNoti }) => {
                             </button>
                             <button
                                 onClick={() => {
-                                    handleUserUpdate(user.user._id, userdata, setNoti, setOpenModal)
+                                    handleUserUpdate(user._id, userdata, setNoti, setOpenModal)
                                 }}
                             >
                                 Cập nhật

@@ -1,6 +1,7 @@
 import axios from "axios";
-const FileDownload = require('js-file-download');
+import { logout } from "../authContext/AuthAction"
 
+const FileDownload = require('js-file-download');
 const BACK_END_URL = process.env.REACT_APP_BACKEND_URL
 export const getListUser = async (setNotify) => {
     try {
@@ -14,6 +15,28 @@ export const getListUser = async (setNotify) => {
         setNotify({
             isOpen: true,
             message: "Lỗi hệ thống: " + err,
+            type: "error",
+        });
+    }
+}
+
+export const resetPassword = async (data, setNoti, setOpenModal) => {
+    try {
+        const res = await axios.put(BACK_END_URL + "/users/resetPassword",data, {
+            headers: {
+                token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
+            },
+        });
+        setNoti({
+            isOpen: true,
+            message: res.data.msg,
+            type: "success",
+        });
+        setOpenModal(false);
+    } catch (err) {
+        setNoti({
+            isOpen: true,
+            message: err.response.data.msg,
             type: "error",
         });
     }
@@ -288,5 +311,21 @@ export const handleCreate = async (data, setNotify, setOpenModal) => {
             message: "Lỗi hệ thống: " + err,
             type: "error",
         });
+    }
+};
+
+export const getUser = async (dispatch) => {
+    try {
+        const res = await axios.get(BACK_END_URL + "/users/getuser", {
+            headers: {
+                token: "Bearer " + JSON.parse(localStorage.getItem("user"))?.accessToken,
+            },
+        });
+        return res
+    } catch (err) {
+        if (err?.response?.status === 401) {
+            localStorage.removeItem("user");
+            dispatch(logout());
+        }
     }
 };

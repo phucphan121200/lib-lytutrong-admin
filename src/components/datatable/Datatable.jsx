@@ -18,6 +18,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import PopupUpload from "../popup/popupUpload/PopupUpload";
+import PopupReset from "../popup/popupReset/PopupReset";
 
 const Datatable = () => {
 
@@ -26,6 +27,7 @@ const Datatable = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalUpdate, setModalUpdate] = useState(false);
   const [modalUpload, setModalUpload] = useState(false);
+  const [modalReset, setModalReset] = useState(false);
   const [createUpdate, setCreateUpdate] = useState(0);
   const [notify, setNotify] = useState({
     isOpen: false,
@@ -141,7 +143,7 @@ const Datatable = () => {
     {
       field: "action",
       headerName: "Thao tác",
-      width: 130,
+      width: 200,
       renderCell: (params) => {
         return (
           <div className="cellAction">
@@ -157,6 +159,15 @@ const Datatable = () => {
               }}
             >
               Cập nhật
+            </div>
+            <div
+              className="resetButton"
+              onClick={() => {
+                setModalReset(true)
+                setIdUser(params.row._id)
+              }}
+            >
+              Cấp lại
             </div>
             <div
               className="deleteButton"
@@ -260,6 +271,14 @@ const Datatable = () => {
             setNoti={setNotify}
             isPopup={1}
             setDataUser={setRecord}
+          />}
+      </div>
+      <div className="modalupdate">
+        {modalReset &&
+          <PopupReset
+            iduser={idUser}
+            setOpenModal={setModalReset}
+            setNoti={setNotify}
           />}
       </div>
       <Notification

@@ -14,7 +14,7 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import { Link } from "react-router-dom";
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { DarkModeContext } from "../../context/darkModeContext/darkModeContext";
-import { useContext, useState } from "react";
+import { useEffect, useContext, useState } from "react";
 import Notification from "../../components/alert/Notification";
 import { logoutAdmin } from "../../context/authContext/apiCalls";
 import { AuthContext } from "../../context/authContext/AuthContext";
@@ -22,7 +22,7 @@ import { logout } from "../../context/authContext/AuthAction";
 import CategoryIcon from '@mui/icons-material/Category';
 import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
 import PopupUserInfo from "../popup/popupUserInfo/PopupUserInfo"
-
+import { getUser } from "../../context/userContext/apiCalls"
 
 const Sidebar = () => {
   // const { dispatchDark } = useContext(DarkModeContext);
@@ -32,17 +32,25 @@ const Sidebar = () => {
     message: "",
     type: "",
   });
+  const [userInfo, setUserInfo] = useState("")
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleLogout = (e) => {
     dispatch(logout())
     logoutAdmin(dispatch, setNotify);
   };
+  useEffect(() => {
+    (async () => {
+      const userList = await getUser(dispatch)
+      setUserInfo(userList?.data?.data)
+    })()
+    return;
+  }, [])
   return (
     <div className="sidebar">
       <div className="top">
         <Link to="/" style={{ textDecoration: "none", display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <img src="https://cdn-icons-png.flaticon.com/512/225/225932.png" alt="" style={{ width: 20, height: 20 }} />
+          <img src="https://firebasestorage.googleapis.com/v0/b/lib-lututrong.appspot.com/o/favicon_w_trans.png?alt=media&token=de204428-9b31-446e-8623-c2467a173b28" alt="" style={{ width: 30, height: 20 }} />
           <span className="logo">Thư viện</span>
         </Link>
       </div>
@@ -87,28 +95,6 @@ const Sidebar = () => {
               <span>Banner</span>
             </li>
           </Link>
-          <p className="title">THỐNG KÊ</p>
-          <li>
-            <InsertChartIcon className="icon" />
-            <span>Tần suất</span>
-          </li>
-          <li>
-            <NotificationsNoneIcon className="icon" />
-            <span>Thông báo</span>
-          </li>
-          {/* <p className="title">SERVICE</p>
-          <li>
-            <SettingsSystemDaydreamOutlinedIcon className="icon" />
-            <span>System Health</span>
-          </li>
-          <li>
-            <PsychologyOutlinedIcon className="icon" />
-            <span>Logs</span>
-          </li>
-          <li>
-            <SettingsApplicationsIcon className="icon" />
-            <span>Settings</span>
-          </li> */}
           <p className="title">TÀI KHOẢN CÁ NHÂN</p>
           <li onClick={async () => {
             setModalOpen(true)
@@ -125,7 +111,7 @@ const Sidebar = () => {
       {modalOpen &&
         <PopupUserInfo
           setOpenModal={setModalOpen}
-          user={user}
+          user={userInfo}
           setNoti={setNotify}
         />}
       <Notification

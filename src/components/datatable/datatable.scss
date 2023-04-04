@@ -113,6 +113,17 @@
       cursor: pointer;
     }
 
+    .resetButton {
+      padding: 2px 5px;
+      border-radius: 5px;
+      //color: rgb(0, 134, 29);
+      color: rgb(255, 255, 255);
+      background-color: rgba(34, 152, 152, 0.8);
+      border: 1px // solid rgba(0, 134, 29, 0.596)
+      ;
+      cursor: pointer;
+    }
+
     .deleteButton {
       padding: 2px 5px;
       border-radius: 5px;
