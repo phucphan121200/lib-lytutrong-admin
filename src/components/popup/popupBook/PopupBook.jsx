@@ -186,7 +186,7 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                 <button className="editButton"
                                     onClick={async () => {
                                         await createBook(dataBook, setNoti, setOpenModal)
-                                        const bookList = await getListBook(setNoti)
+                                        const bookList = await getListBook(1, setNoti)
                                         setDataBook(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
                                     }}>Thêm mới</button>
 
@@ -363,7 +363,7 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                     <button className="editButton"
                                         onClick={async () => {
                                             await updateBook(data._id, dataBook, setNoti, setOpenModal)
-                                            const bookList = await getListBook(setNoti)
+                                            const bookList = await getListBook(1, setNoti)
                                             setDataBook(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
                                         }}>Cập nhật</button>
 
@@ -403,7 +403,7 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                         <button className="editButton"
                                             onClick={async () => {
                                                 await inboundBook(data._id, dataBook, setNoti, setOpenModal)
-                                                const bookList = await getListBook(setNoti)
+                                                const bookList = await getListBook(1, setNoti)
                                                 setDataBook(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
                                             }}>Xác nhận</button>
 
@@ -442,7 +442,7 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                         <button className="liquidButton"
                                             onClick={async () => {
                                                 await liquidBook(data._id, dataBook, setNoti, setOpenModal)
-                                                const bookList = await getListBook(setNoti)
+                                                const bookList = await getListBook(1, setNoti)
                                                 setDataBook(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
                                             }}>Thanh lý</button>
 
