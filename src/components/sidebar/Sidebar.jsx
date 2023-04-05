@@ -74,7 +74,7 @@ const Sidebar = () => {
           <Link to="/books" style={{ textDecoration: "none" }}>
             <li>
               <MenuBookIcon className="icon" />
-              <span>Sách</span>
+              <span> Đầu sách</span>
             </li>
           </Link>
           <Link to="/category" style={{ textDecoration: "none" }}>
