@@ -52,11 +52,10 @@ const DatatableBanner = () => {
         {
             field: "index", headerName: "STT", width: 60, align: "center"
         },
-        { field: "_id", headerName: "Mã sách", width: 100 },
         {
             field: "name",
             headerName: "Tên banner",
-            width: 150,
+            width: 180,
         },
         {
             field: "image",
@@ -75,7 +74,7 @@ const DatatableBanner = () => {
         {
             field: "description",
             headerName: "Mô tả",
-            width: 200,
+            width: 260,
         },
         {
             field: "link",

@@ -133,9 +133,9 @@ export const allColumns = [
     },
     {
         field: "cartItems.length",
-        headerName: "Số đầu sách",
+        headerName: "Số phiên mượn",
         align: "center",
-        width: 110,
+        width: 150,
         renderCell: (params) => {
             return (
                 <div className="cellWithImg">
@@ -146,7 +146,7 @@ export const allColumns = [
     },
     {
         field: "cartItems.bookId",
-        headerName: "Số lượng sách",
+        headerName: "Số sách mượn",
         align: "center",
         width: 130,
         renderCell: (params) => {

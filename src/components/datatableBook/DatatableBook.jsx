@@ -283,6 +283,7 @@ const DatatableBook = () => {
             <div className="modalupdate">
                 {modalUpdate &&
                     <PopupBook
+                        choose={choose}
                         setOpenModal={setModalUpdate}
                         createUpdate={createUpdate}
                         data={idBook}

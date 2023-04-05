@@ -127,12 +127,6 @@ const DatatableBorrow = () => {
             <div className="datatableTitle">
                 Danh sách phiên mượn sách
                 <div style={{ display: "flex" }}>
-                    {/* <TextField
-                        size="small"
-                        label="Tìm kiếm tên người dùng"
-                        onChange={handleSearch}
-                        style={{ marginRight: "10px" }}
-                    ></TextField> */}
                     <FormControl size="small" sx={{ marginRight: "10px" }}
                         variant="outlined"
                         id="outlined-required"

@@ -8,7 +8,7 @@ import { createBook, getListBook, updateBook, inboundBook, liquidBook } from "..
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import ModeIcon from '@mui/icons-material/Mode';
 
-const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDataBook }) => {
+const PopupBook = ({ choose, setOpenModal, createUpdate, category, data, setNoti, setDataBook }) => {
 
     const fixedOptions = [];
     const [dataBook, setDataBook1] = useState(createUpdate == 1 ? { categoryItems: [{ categoryId: category[0]._id }] } : createUpdate == 2 ? data : "")
@@ -186,7 +186,7 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                 <button className="editButton"
                                     onClick={async () => {
                                         await createBook(dataBook, setNoti, setOpenModal)
-                                        const bookList = await getListBook(1, setNoti)
+                                        const bookList = await getListBook(choose, setNoti)
                                         setDataBook(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
                                     }}>Thêm mới</button>
 
@@ -293,7 +293,7 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                 <TextField
                                                     required
                                                     size='small'
-                                                    name='stock'
+                                                    name='authStock'
                                                     id="outlined-required"
                                                     label="Khả dụng"
                                                     type={"number"}
@@ -307,7 +307,7 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                 <TextField
                                                     required
                                                     size='small'
-                                                    name='stock'
+                                                    name='liquid'
                                                     id="outlined-required"
                                                     label="Thanh lý"
                                                     type={"number"}
@@ -363,7 +363,7 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                     <button className="editButton"
                                         onClick={async () => {
                                             await updateBook(data._id, dataBook, setNoti, setOpenModal)
-                                            const bookList = await getListBook(1, setNoti)
+                                            const bookList = await getListBook(choose, setNoti)
                                             setDataBook(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
                                         }}>Cập nhật</button>
 
@@ -403,7 +403,7 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                         <button className="editButton"
                                             onClick={async () => {
                                                 await inboundBook(data._id, dataBook, setNoti, setOpenModal)
-                                                const bookList = await getListBook(1, setNoti)
+                                                const bookList = await getListBook(choose, setNoti)
                                                 setDataBook(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
                                             }}>Xác nhận</button>
 
@@ -442,7 +442,7 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                         <button className="liquidButton"
                                             onClick={async () => {
                                                 await liquidBook(data._id, dataBook, setNoti, setOpenModal)
-                                                const bookList = await getListBook(1, setNoti)
+                                                const bookList = await getListBook(choose, setNoti)
                                                 setDataBook(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
                                             }}>Thanh lý</button>
 

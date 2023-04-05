@@ -42,7 +42,7 @@ const Popup = ({ setOpenModal, title, data, isPopup, setNoti, setDataUser }) => 
                             isPopup == 1 ?
                                 <button onClick={async () => {
                                     await handleDeleteBook(data, setNoti)
-                                    const bookList = await getListBook(setNoti)
+                                    const bookList = await getListBook(1, setNoti)
                                     setDataUser(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
                                     setOpenModal(false)
                                 }

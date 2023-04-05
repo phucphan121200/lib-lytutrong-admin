@@ -52,10 +52,9 @@ const DatatableCate = () => {
         {
             field: "index", headerName: "STT", width: 60, align: "center"
         },
-        { field: "_id", headerName: "Mã sách", width: 250 },
         {
             field: "name",
-            headerName: "Tên sách",
+            headerName: "Tên thể loại",
             width: 250,
         },
         {
