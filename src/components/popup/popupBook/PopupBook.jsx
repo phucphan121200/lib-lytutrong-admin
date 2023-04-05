@@ -42,23 +42,6 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
         }
     }
 
-    // const handleUpload = () => {
-    //     const fileName = "lib-lytutrong" + new Date().getTime() + new Date().getHours() + new Date().getMinutes() + new Date().getSeconds();
-    //     const imageRef = ref(storage, fileName)
-    //     uploadBytes(imageRef, image).then(() => {
-    //         getDownloadURL(imageRef).then((url) => {
-    //             setUrl(url)
-    //             setDataBook1({ ...dataBook, image: url });
-    //         }).catch(err => {
-    //             console.log(err.message, "Lỗi lấy url")
-    //         })
-    //         setImage(null)
-    //     })
-    //         .catch((err) => {
-    //             console.log(err.message, "Lỗi up ảnh")
-    //         })
-    // }
-
     return (
         <div className="modalBackgroundBook">
             <div className="modalContainerBook">
@@ -255,6 +238,7 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                             name='publicationdate'
                                                             id="outlined-required"
                                                             label="Năm xuất bản"
+                                                            type={"number"}
                                                             defaultValue={data.publicationdate}
                                                             onChange={handleChange}
                                                             sx={{
@@ -283,6 +267,7 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                     name='price'
                                                     id="outlined-required"
                                                     label="Đơn giá"
+                                                    type={"number"}
                                                     defaultValue={data.price}
                                                     onChange={handleChange}
                                                     sx={{
@@ -295,7 +280,7 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                     name='stock'
                                                     id="outlined-required"
                                                     label="Vật lý"
-                                                    disabled
+                                                    type={"number"}
                                                     defaultValue={data.stock}
                                                     onChange={handleChange}
                                                     sx={{
@@ -311,7 +296,7 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                     name='stock'
                                                     id="outlined-required"
                                                     label="Khả dụng"
-                                                    disabled
+                                                    type={"number"}
                                                     defaultValue={data.authStock}
                                                     onChange={handleChange}
                                                     sx={{
@@ -325,7 +310,7 @@ const PopupBook = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                                     name='stock'
                                                     id="outlined-required"
                                                     label="Thanh lý"
-                                                    disabled
+                                                    type={"number"}
                                                     defaultValue={data.liquid}
                                                     onChange={handleChange}
                                                     sx={{

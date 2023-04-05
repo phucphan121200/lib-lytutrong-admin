@@ -2,9 +2,9 @@ import axios from "axios";
 const FileDownload = require('js-file-download');
 
 const BACK_END_URL = process.env.REACT_APP_BACKEND_URL
-export const getListBook = async (setNotify) => {
+export const getListBook = async (data, setNotify) => {
     try {
-        const res = await axios.get(BACK_END_URL+"/books/getallBook", {
+        const res = await axios.get(BACK_END_URL + "/books/getallBook/" + data, {
             headers: {
                 token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
             },
@@ -21,7 +21,7 @@ export const getListBook = async (setNotify) => {
 
 export const getallStockBook = async (setNotify) => {
     try {
-        const res = await axios.get(BACK_END_URL+"/books/getallStockBook", {
+        const res = await axios.get(BACK_END_URL + "/books/getallStockBook", {
             headers: {
                 token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
             },
@@ -40,7 +40,7 @@ export const importFileBook = async (data, setNotify, setOpenModal) => {
     const formData = new FormData();
     formData.append("file", data)
     try {
-        const res = await axios.post(BACK_END_URL+"/books/addFileBook", formData, {
+        const res = await axios.post(BACK_END_URL + "/books/addFileBook", formData, {
             headers: {
                 token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
             },
@@ -390,7 +390,7 @@ export const getCategories = async (setNotify) => {
 
 export const createBook = async (data, setNotify, setOpenModal) => {
     try {
-        const res = await axios.post(BACK_END_URL+"/books/createBook", data, {
+        const res = await axios.post(BACK_END_URL + "/books/createBook", data, {
             headers: {
                 token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
             },
@@ -450,9 +450,9 @@ export const updateBook = async (id, data, setNotify, setOpenModal) => {
     }
 }
 
-export const exportFileBook = async (setNotify) => {
+export const exportFileBook = async (choose, setNotify) => {
     try {
-        const res = await axios.get(BACK_END_URL+"/books/exportFileBook", {
+        const res = await axios.get(BACK_END_URL + "/books/exportFileBook/" + choose, {
             headers: {
                 token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
             },
@@ -502,7 +502,7 @@ export const inboundBook = async (id, data, setNotify, setOpenModal) => {
 
 export const liquidBook = async (id, data, setNotify, setOpenModal) => {
     try {
-        const res = await axios.put(BACK_END_URL+"/books/liquidBook/" + id, data, {
+        const res = await axios.put(BACK_END_URL + "/books/liquidBook/" + id, data, {
             headers: {
                 token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
             },
@@ -533,7 +533,7 @@ export const liquidBook = async (id, data, setNotify, setOpenModal) => {
 
 export const returnBook = async (id, data, setNotify, setOpenModal) => {
     try {
-        const res = await axios.put(BACK_END_URL+"/carts/returnBook/" + id, data, {
+        const res = await axios.put(BACK_END_URL + "/carts/returnBook/" + id, data, {
             headers: {
                 token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
             },
@@ -564,7 +564,7 @@ export const returnBook = async (id, data, setNotify, setOpenModal) => {
 
 export const borrowBook = async (data, setNotify, setOpenModal) => {
     try {
-        const res = await axios.post(BACK_END_URL+"/carts/borrowBookAdmin", data, {
+        const res = await axios.post(BACK_END_URL + "/carts/borrowBookAdmin", data, {
             headers: {
                 token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
             },

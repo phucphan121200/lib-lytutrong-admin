@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getListBook, exportFileBook } from "../../context/bookContext/apiCalls"
 import LoadingCircle from "../../components/loadingCircle/LoadingCircle";
-import { Button, Select, Switch } from "antd";
+import Select from '@mui/material/Select';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import Notification from "../../components/alert/Notification";
 import Popup from "../popup/popupConfirm/Popup";
@@ -19,6 +19,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import PopupUpload from "../popup/popupUpload/PopupUpload";
+import MenuItem from '@mui/material/MenuItem';
 
 const DatatableBook = () => {
 
@@ -29,6 +30,7 @@ const DatatableBook = () => {
     const [modalUpload, setModalUpload] = useState(false);
     const [createUpdate, setCreateUpdate] = useState(0);
     const [category, setCate] = useState("")
+    const [choose, setChoose] = useState(1)
     const [notify, setNotify] = useState({
         isOpen: false,
         message: "",
@@ -37,7 +39,7 @@ const DatatableBook = () => {
 
     useEffect(() => {
         (async () => {
-            const bookList = await getListBook(setNotify)
+            const bookList = await getListBook(choose, setNotify)
             setDataBook(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
             const cateList = await getCategories(setNotify)
             setCate(cateList?.data?.data)
@@ -54,6 +56,13 @@ const DatatableBook = () => {
         })
         setRecord(newData)
     }
+
+    const handleChange = async (event) => {
+        setChoose(event.target.value);
+        const book = await getListBook(event.target.value, setNotify)
+        setDataBook(book?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
+        setRecord(book?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
+      };
 
     const bookColumns = [
         {
@@ -173,7 +182,7 @@ const DatatableBook = () => {
     return (
         <div className="datatablee">
             <div className="datatableTitle">
-            Danh sách đầu sách
+                Danh sách đầu sách
                 <div style={{ display: "flex" }}>
                     <div className="link" style={{ marginRight: "10px" }}
                         onClick={() => {
@@ -185,11 +194,34 @@ const DatatableBook = () => {
                     </div>
                     <div className="linkEx" style={{ marginRight: "10px" }}
                         onClick={() => {
-                            exportFileBook(setNotify)
+                            exportFileBook(choose, setNotify)
                         }}
                     >
                         Xuất dữ liệu
                     </div>
+                    <FormControl sx={{ width: "250px", marginRight: "10px"}} size="small">
+                        <InputLabel id="demo-simple-select-label">Lọc sách theo thể loại</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={choose}
+                            MenuProps={{ disableScrollLock: true }}
+                            label="Lọc sách theo thể loại"
+                            onChange={handleChange}
+                        >
+                            <MenuItem key={123456789} value={1}>Không lọc</MenuItem>
+                            {
+                                category ?
+                                    category.map(option => {
+                                        return (
+                                            <MenuItem key={option._id} value={option._id}>{option.name}</MenuItem>
+                                        )
+                                    })
+                                    :
+                                    <></>
+                            }
+                        </Select>
+                    </FormControl>
                     <FormControl size="small" sx={{ marginRight: "10px" }}
                         variant="outlined"
                         id="outlined-required"

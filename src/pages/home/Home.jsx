@@ -73,7 +73,7 @@ const Home = () => {
   useEffect(() => {
     (async () => {
       const userItems = await getListUser(setNotify)
-      const bookItems = await getListBook(setNotify)
+      const bookItems = await getListBook(1, setNotify)
       const borrowedItems = await getBorrowedBook(setNotify)
       const borrowedStatsItems = await getBorrowedStats(setNotify)
       setUserList(userItems)
