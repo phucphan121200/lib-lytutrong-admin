@@ -67,18 +67,31 @@ const PopupBook = ({ choose, setOpenModal, createUpdate, category, data, setNoti
                                                         sx={{
                                                             '& > :not(style)': { marginRight: "10px" },
                                                         }}
-                                                    />
+                                                    />                                     
                                                 </div>
                                                 <div>
                                                     <TextField
-                                                        required
                                                         size='small'
                                                         id="outlined-required"
                                                         label="Tác giả"
                                                         name='translator'
                                                         onChange={handleChange}
+                                                        style={{width: "137px"}}
                                                         sx={{
-                                                            '& > :not(style)': { marginRight: "10px", marginTop: "10px" },
+                                                            '& > :not(style)': { marginRight: "10px", marginTop: "10px"},
+                                                        }}
+                                                    />
+                                                    <TextField
+                                                        size='small'
+                                                        id="outlined-required"
+                                                        label="Khối"
+                                                        name='grade'
+                                                        type={"number"}
+                                                        defaultValue={0}
+                                                        InputProps={{ inputProps: { min: 0, max: 5 } }}
+                                                        onChange={handleChange}
+                                                        sx={{
+                                                            '& > :not(style)': { marginRight: "10px", marginTop: "10px"},
                                                         }}
                                                     />
                                                 </div>
@@ -224,12 +237,26 @@ const PopupBook = ({ choose, setOpenModal, createUpdate, category, data, setNoti
                                                             id="outlined-required"
                                                             label="Tác giả"
                                                             name='translator'
+                                                            style={{width: "137px"}}
                                                             defaultValue={data.translator}
                                                             onChange={handleChange}
                                                             sx={{
                                                                 '& > :not(style)': { marginRight: "10px", marginTop: "10px" },
                                                             }}
                                                         />
+                                                        <TextField
+                                                        size='small'
+                                                        id="outlined-required"
+                                                        label="Khối"
+                                                        name='grade'
+                                                        type={"number"}
+                                                        defaultValue={data.grade}
+                                                        InputProps={{ inputProps: { min: 0, max: 5 } }}
+                                                        onChange={handleChange}
+                                                        sx={{
+                                                            '& > :not(style)': { marginRight: "10px", marginTop: "10px"},
+                                                        }}
+                                                    />
                                                     </div>
                                                     <div>
                                                         <TextField
