@@ -16,18 +16,19 @@ const PopupBook = ({ choose, setOpenModal, createUpdate, category, data, setNoti
     const [value2, setValue2] = useState(createUpdate == 1 ? [category[0]] : data?.categoryItems.map(item => item.categoryId))
     const [url, setUrl] = useState(createUpdate == 1 ? "https://firebasestorage.googleapis.com/v0/b/lib-lututrong.appspot.com/o/lib-lytutrong167903303218513352?alt=media&token=33928d40-207c-44d7-98cb-331e09e3e3ce" : data.image)
     const [image, setImage] = useState(null)
-
+    const [loading, setLoading] = useState(false);
     const handleChange = (e) => {
         const value = e.target.value;
         setDataBook1({ ...dataBook, [e.target.name]: value });
     };
 
-    const handleImageChange = (e) => {
+    const handleImageChange = async (e) => {
         if (e.target.files[0]) {
             //setImage(e.target.files[0])
             const fileName = "lib-lytutrong" + new Date().getTime() + new Date().getHours() + new Date().getMinutes() + new Date().getSeconds();
             const imageRef = ref(storage, fileName)
-            uploadBytes(imageRef, e.target.files[0]).then(() => {
+            setLoading(true)
+            await uploadBytes(imageRef, e.target.files[0]).then(() => {
                 getDownloadURL(imageRef).then((url) => {
                     setUrl(url)
                     setDataBook1({ ...dataBook, image: url });
@@ -39,6 +40,7 @@ const PopupBook = ({ choose, setOpenModal, createUpdate, category, data, setNoti
                 .catch((err) => {
                     console.log(err.message, "Lỗi up ảnh")
                 })
+            setLoading(false)
         }
     }
 
@@ -67,7 +69,7 @@ const PopupBook = ({ choose, setOpenModal, createUpdate, category, data, setNoti
                                                         sx={{
                                                             '& > :not(style)': { marginRight: "10px" },
                                                         }}
-                                                    />                                     
+                                                    />
                                                 </div>
                                                 <div>
                                                     <TextField
@@ -76,9 +78,9 @@ const PopupBook = ({ choose, setOpenModal, createUpdate, category, data, setNoti
                                                         label="Tác giả"
                                                         name='translator'
                                                         onChange={handleChange}
-                                                        style={{width: "137px"}}
+                                                        style={{ width: "137px" }}
                                                         sx={{
-                                                            '& > :not(style)': { marginRight: "10px", marginTop: "10px"},
+                                                            '& > :not(style)': { marginRight: "10px", marginTop: "10px" },
                                                         }}
                                                     />
                                                     <TextField
@@ -91,7 +93,7 @@ const PopupBook = ({ choose, setOpenModal, createUpdate, category, data, setNoti
                                                         InputProps={{ inputProps: { min: 0, max: 5 } }}
                                                         onChange={handleChange}
                                                         sx={{
-                                                            '& > :not(style)': { marginRight: "10px", marginTop: "10px"},
+                                                            '& > :not(style)': { marginRight: "10px", marginTop: "10px" },
                                                         }}
                                                     />
                                                 </div>
@@ -197,11 +199,21 @@ const PopupBook = ({ choose, setOpenModal, createUpdate, category, data, setNoti
                                         setOpenModal(false)
                                     }}>Đóng</button>
                                 <button className="editButton"
+                                    disabled={loading}
                                     onClick={async () => {
+                                        setLoading(true)
                                         await createBook(dataBook, setNoti, setOpenModal)
                                         const bookList = await getListBook(choose, setNoti)
                                         setDataBook(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
-                                    }}>Thêm mới</button>
+                                        setLoading(false)
+                                    }}>
+                                    {
+                                        loading ?
+                                            <div className='Loader' />
+                                            :
+                                            <>Thêm mới</>
+                                    }
+                                </button>
 
                             </div>
                         </>
@@ -237,7 +249,7 @@ const PopupBook = ({ choose, setOpenModal, createUpdate, category, data, setNoti
                                                             id="outlined-required"
                                                             label="Tác giả"
                                                             name='translator'
-                                                            style={{width: "137px"}}
+                                                            style={{ width: "137px" }}
                                                             defaultValue={data.translator}
                                                             onChange={handleChange}
                                                             sx={{
@@ -245,18 +257,18 @@ const PopupBook = ({ choose, setOpenModal, createUpdate, category, data, setNoti
                                                             }}
                                                         />
                                                         <TextField
-                                                        size='small'
-                                                        id="outlined-required"
-                                                        label="Khối"
-                                                        name='grade'
-                                                        type={"number"}
-                                                        defaultValue={data.grade}
-                                                        InputProps={{ inputProps: { min: 0, max: 5 } }}
-                                                        onChange={handleChange}
-                                                        sx={{
-                                                            '& > :not(style)': { marginRight: "10px", marginTop: "10px"},
-                                                        }}
-                                                    />
+                                                            size='small'
+                                                            id="outlined-required"
+                                                            label="Khối"
+                                                            name='grade'
+                                                            type={"number"}
+                                                            defaultValue={data.grade}
+                                                            InputProps={{ inputProps: { min: 0, max: 5 } }}
+                                                            onChange={handleChange}
+                                                            sx={{
+                                                                '& > :not(style)': { marginRight: "10px", marginTop: "10px" },
+                                                            }}
+                                                        />
                                                     </div>
                                                     <div>
                                                         <TextField
@@ -327,7 +339,7 @@ const PopupBook = ({ choose, setOpenModal, createUpdate, category, data, setNoti
                                                     defaultValue={data.authStock}
                                                     onChange={handleChange}
                                                     sx={{
-                                                        '& > :not(style)': { marginRight: "10px", marginTop: "10px"},
+                                                        '& > :not(style)': { marginRight: "10px", marginTop: "10px" },
                                                     }}
                                                 />
 
@@ -341,7 +353,7 @@ const PopupBook = ({ choose, setOpenModal, createUpdate, category, data, setNoti
                                                     defaultValue={data.liquid}
                                                     onChange={handleChange}
                                                     sx={{
-                                                        '& > :not(style)': { marginTop: "10px"},
+                                                        '& > :not(style)': { marginTop: "10px" },
                                                     }}
                                                 />
 
@@ -388,11 +400,21 @@ const PopupBook = ({ choose, setOpenModal, createUpdate, category, data, setNoti
                                             setOpenModal(false)
                                         }}>Đóng</button>
                                     <button className="editButton"
+                                        disabled={loading}
                                         onClick={async () => {
+                                            setLoading(true)
                                             await updateBook(data._id, dataBook, setNoti, setOpenModal)
                                             const bookList = await getListBook(choose, setNoti)
                                             setDataBook(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
-                                        }}>Cập nhật</button>
+                                            setLoading(false)
+                                        }}>
+                                        {
+                                            loading ?
+                                                <div className='Loader' />
+                                                :
+                                                <>Cập nhật</>
+                                        }
+                                    </button>
 
                                 </div>
                             </>
@@ -428,11 +450,21 @@ const PopupBook = ({ choose, setOpenModal, createUpdate, category, data, setNoti
                                                 setOpenModal(false)
                                             }}>Đóng</button>
                                         <button className="editButton"
+                                            disabled={loading}
                                             onClick={async () => {
+                                                setLoading(true)
                                                 await inboundBook(data._id, dataBook, setNoti, setOpenModal)
                                                 const bookList = await getListBook(choose, setNoti)
                                                 setDataBook(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
-                                            }}>Xác nhận</button>
+                                                setLoading(false)
+                                            }}>
+                                            {
+                                                loading ?
+                                                    <div className='Loader' />
+                                                    :
+                                                    <>Xác nhận</>
+                                            }
+                                        </button>
 
                                     </div>
                                 </>
@@ -467,11 +499,21 @@ const PopupBook = ({ choose, setOpenModal, createUpdate, category, data, setNoti
                                                 setOpenModal(false)
                                             }}>Đóng</button>
                                         <button className="liquidButton"
+                                            disabled={loading}
                                             onClick={async () => {
+                                                setLoading(true)
                                                 await liquidBook(data._id, dataBook, setNoti, setOpenModal)
                                                 const bookList = await getListBook(choose, setNoti)
                                                 setDataBook(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
-                                            }}>Thanh lý</button>
+                                                setLoading(false)
+                                            }}>
+                                            {
+                                                loading ?
+                                                    <div className='Loader' />
+                                                    :
+                                                    <>Thanh lý</>
+                                            }
+                                        </button>
 
                                     </div>
                                 </>

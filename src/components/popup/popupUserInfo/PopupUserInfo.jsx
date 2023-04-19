@@ -37,13 +37,15 @@ const PopupUserInfo = ({ setOpenModal, user, setNoti }) => {
     const [newPassword, setNewPassword] = useState(false);
     const [newRepPassword, setNewRepPassword] = useState(false);
     const [errorMessage, setErrorMessage] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         const value = e.target.value;
         setUserData({ ...userdata, [e.target.name]: value });
     };
 
-    const handlePassword = () => {
+    const handlePassword = async () => {
+        setLoading(true)
         if (newPassword != newRepPassword) {
             setErrorMessage(['Nhập lại mật khẩu mới không khớp!'])
         }
@@ -53,7 +55,8 @@ const PopupUserInfo = ({ setOpenModal, user, setNoti }) => {
                 newPassword: newPassword,
                 repPassword: newRepPassword
             }
-            handleUpdatePassword(data, setNoti, setOpenModal)
+            await handleUpdatePassword(data, setNoti, setOpenModal)
+            setLoading(false)
         }
     }
 
@@ -65,12 +68,13 @@ const PopupUserInfo = ({ setOpenModal, user, setNoti }) => {
         event.preventDefault();
     };
 
-    const handleImageChange = (e) => {
+    const handleImageChange = async (e) => {
         if (e.target.files[0]) {
             //setImage(e.target.files[0])
             const fileName = "lib-lytutrong" + new Date().getTime() + new Date().getHours() + new Date().getMinutes() + new Date().getSeconds();
             const imageRef = ref(storage, fileName)
-            uploadBytes(imageRef, e.target.files[0]).then(() => {
+            setLoading(true)
+            await uploadBytes(imageRef, e.target.files[0]).then(() => {
                 getDownloadURL(imageRef).then((url) => {
                     setUrl(url)
                     setUserData({ ...userdata, image: url });
@@ -82,6 +86,7 @@ const PopupUserInfo = ({ setOpenModal, user, setNoti }) => {
                 .catch((err) => {
                     console.log(err.message, "Lỗi up ảnh")
                 })
+            setLoading(false)
         }
     }
 
@@ -99,13 +104,13 @@ const PopupUserInfo = ({ setOpenModal, user, setNoti }) => {
                             // style={{display: "flex"}}
                             >
                                 <div className='avatarUser'>
-                                    <Avatar src={url} alt="" sx={{ width: "184px", height: "184px" }}/>
+                                    <Avatar src={url} alt="" sx={{ width: "184px", height: "184px" }} />
                                     <input id="file" type="file" accept='image/png, image/jpg, image/jpeg' onChange={handleImageChange} className="addImage" style={{ display: "none" }} />
                                     <div className='fade'>
-                                </div>
-                                <label className='modify' htmlFor="file">
-                                    <ModeIcon style={{fontSize: "30px"}}/>
-                                </label>
+                                    </div>
+                                    <label className='modify' htmlFor="file">
+                                        <ModeIcon style={{ fontSize: "30px" }} />
+                                    </label>
                                 </div>
                                 <form className='userInfor'>
                                     <div className='fieldInfor'>
@@ -152,11 +157,19 @@ const PopupUserInfo = ({ setOpenModal, user, setNoti }) => {
                                 Đóng
                             </button>
                             <button
-                                onClick={() => {
-                                    handleUserUpdate(user._id, userdata, setNoti, setOpenModal)
+                                disabled={loading}
+                                onClick={async () => {
+                                    setLoading(true)
+                                    await handleUserUpdate(user._id, userdata, setNoti, setOpenModal)
+                                    setLoading(false)
                                 }}
                             >
-                                Cập nhật
+                                {
+                                    loading ?
+                                        <div className='Loader' />
+                                        :
+                                        <>Cập nhật</>
+                                }
                             </button>
                         </div>
                     </TabPanel>
@@ -260,9 +273,15 @@ const PopupUserInfo = ({ setOpenModal, user, setNoti }) => {
                                 Đóng
                             </button>
                             <button
+                                disabled={loading}
                                 onClick={handlePassword}
                             >
-                                Cập nhật
+                                {
+                                    loading ?
+                                        <div className='Loader' />
+                                        :
+                                        <>Cập nhật</>
+                                }
                             </button>
                         </div>
                     </TabPanel>

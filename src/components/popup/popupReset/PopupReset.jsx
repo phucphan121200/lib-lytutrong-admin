@@ -13,6 +13,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 const PopupReset = ({ iduser, setOpenModal, setNoti }) => {
     const [data, setData] = useState({iduser: iduser})
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
     const handleChange = (e) => {
         const value = e.target.value;
         setData({ ...data, password: value });
@@ -71,11 +72,20 @@ const PopupReset = ({ iduser, setOpenModal, setNoti }) => {
                         id="cancelBtnReset">
                         Đóng
                     </button>
-                            <button onClick={async () => {
+                            <button 
+                            disabled={loading}
+                            onClick={async () => {
+                                setLoading(true)
                                 await resetPassword(data, setNoti, setOpenModal)
+                                setLoading(false)
                             }
                             }>
-                                Xác nhận
+                                {
+                                    loading ?
+                                    <div className='Loader' />
+                                    :
+                                    <>Xác nhận</>
+                                } 
                             </button>
                 </div>
             </div>

@@ -11,17 +11,19 @@ const PopupCate = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
     const [dataBook, setDataBook1] = useState(createUpdate == 1 ? "" : createUpdate == 2 ? data : "")
     const [url, setUrl] = useState(createUpdate == 1 ? "https://img.freepik.com/free-icon/list_318-390195.jpg" : data.image)
     const [image, setImage] = useState(null)
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         const value = e.target.value;
         setDataBook1({ ...dataBook, [e.target.name]: value });
     };
-    const handleImageChange = (e) => {
+    const handleImageChange = async (e) => {
         if (e.target.files[0]) {
             //setImage(e.target.files[0])
             const fileName = "lib-lytutrong" + new Date().getTime() + new Date().getHours() + new Date().getMinutes() + new Date().getSeconds();
             const imageRef = ref(storage, fileName)
-            uploadBytes(imageRef, e.target.files[0]).then(() => {
+            setLoading(true)
+            await uploadBytes(imageRef, e.target.files[0]).then(() => {
                 getDownloadURL(imageRef).then((url) => {
                     setUrl(url)
                     setDataBook1({ ...dataBook, image: url });
@@ -33,6 +35,7 @@ const PopupCate = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                 .catch((err) => {
                     console.log(err.message, "Lỗi up ảnh")
                 })
+            setLoading(false)
         }
     }
     return (
@@ -85,11 +88,19 @@ const PopupCate = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                         setOpenModal(false)
                                     }}>Đóng</button>
                                 <button className="editButton"
+                                    disabled={loading}
                                     onClick={async () => {
+                                        setLoading(true)
                                         await createCate(dataBook, setNoti, setOpenModal)
                                         const bookList = await getListCate(setNoti)
                                         setDataBook(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
-                                    }}>Thêm mới</button>
+                                        setLoading(false)
+                                    }}>{
+                                        loading ?
+                                        <div className='Loader' />
+                                        :
+                                        <>Thêm mới</>
+                                    }</button>
 
                             </div>
                         </>
@@ -137,11 +148,19 @@ const PopupCate = ({ setOpenModal, createUpdate, category, data, setNoti, setDat
                                             setOpenModal(false)
                                         }}>Đóng</button>
                                     <button className="editButton"
+                                    disabled={loading}
                                         onClick={async () => {
+                                            setLoading(true)
                                             await updateCate(dataBook._id, dataBook, setNoti, setOpenModal)
                                             const bookList = await getListCate(setNoti)
                                             setDataBook(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
-                                        }}>Cập nhật</button>
+                                            setLoading(false)
+                                        }}>{
+                                            loading ?
+                                            <div className='Loader' />
+                                            :
+                                            <>Cập nhật</>
+                                        }</button>
 
                                 </div>
                             </>

@@ -9,6 +9,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 const PopupUpload = ({ setOpenModal, isPopup, setNoti, setDataUser }) => {
 
     const [selectedFile, setSelectedFile] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const handleFileSelect = (event) => {
         setSelectedFile(event.target.files[0])
@@ -46,41 +47,59 @@ const PopupUpload = ({ setOpenModal, isPopup, setNoti, setDataUser }) => {
                     </button>
                     {
                         isPopup == 1 ?
-                        selectedFile?
-                            <button id="upBtn" onClick={async () => {
-                                await importFileUser(selectedFile, setNoti, setOpenModal)
-                                const userList = await getListUser(setNoti)
-                                setDataUser(userList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
-                            }
-                            }>
-                                Thêm
-                            </button>
-                            :
-                            <button id="blockBtn" disabled={true} onClick={async () => {
-                            }
-                            }>
-                                Chọn file để thêm
-                            </button>
+                            selectedFile ?
+                                <button id="upBtn"
+                                    disabled={loading}
+                                    onClick={async () => {
+                                        setLoading(true)
+                                        await importFileUser(selectedFile, setNoti, setOpenModal)
+                                        const userList = await getListUser(setNoti)
+                                        setDataUser(userList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
+                                        setLoading(false)
+                                    }
+                                    }>
+                                    {
+                                        loading ?
+                                            <div className='Loader' />
+                                            :
+                                            <>Thêm</>
+                                    }
+                                </button>
+                                :
+                                <button id="blockBtn" disabled={true} onClick={async () => {
+                                }
+                                }>
+                                    Chọn file để thêm
+                                </button>
                             :
                             <></>
                     }
                     {
                         isPopup == 2 ?
-                        selectedFile?
-                            <button id="upBtn" onClick={async () => {
-                                await importFileBook(selectedFile, setNoti, setOpenModal)
-                                const bookList = await getListBook(setNoti)
-                                setDataUser(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
-                            }
-                            }>
-                                Thêm
-                            </button>
-                            :
-                            <button id="blockBtn" disabled={true} onClick={async () => {
-                            }
-                            }>
-                                Chọn file để thêm
-                            </button>
+                            selectedFile ?
+                                <button id="upBtn" 
+                                disabled={loading}
+                                onClick={async () => {
+                                    setLoading(true)
+                                    await importFileBook(selectedFile, setNoti, setOpenModal)
+                                    const bookList = await getListBook(setNoti)
+                                    setDataUser(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
+                                    setLoading(false)
+                                }
+                                }>
+                                    {
+                                    loading ?
+                                    <div className='Loader' />
+                                    :
+                                    <>Thêm</>
+                                }
+                                </button>
+                                :
+                                <button id="blockBtn" disabled={true} onClick={async () => {
+                                }
+                                }>
+                                    Chọn file để thêm
+                                </button>
                             :
                             <></>
                     }

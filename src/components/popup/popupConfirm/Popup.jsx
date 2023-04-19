@@ -8,6 +8,7 @@ import { handleDeleteBanner, getListBanner } from "../../../context/bannerContex
 
 
 const Popup = ({ setOpenModal, title, data, isPopup, setNoti, setDataUser }) => {
+    const [loading, setLoading] = useState(false);
     return (
         <div className="modalBackgroundd">
             <div className="modalContainerr">
@@ -29,45 +30,81 @@ const Popup = ({ setOpenModal, title, data, isPopup, setNoti, setDataUser }) => 
                     </button>
                     {
                         isPopup == 2 ?
-                            <button onClick={async () => {
-                                await handleDelete(data, setNoti)
-                                const userList = await getListUser(setNoti)
-                                setDataUser(userList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
-                                setOpenModal(false)
-                            }
-                            }>
-                                Xóa
-                            </button>
-                            :
-                            isPopup == 1 ?
-                                <button onClick={async () => {
-                                    await handleDeleteBook(data, setNoti)
-                                    const bookList = await getListBook(1, setNoti)
-                                    setDataUser(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
+                            <button
+                                disabled={loading}
+                                onClick={async () => {
+                                    setLoading(true)
+                                    await handleDelete(data, setNoti)
+                                    const userList = await getListUser(setNoti)
+                                    setDataUser(userList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
+                                    setLoading(false)
                                     setOpenModal(false)
                                 }
                                 }>
-                                    Xóa
-                                </button> :
-                                isPopup == 3 ?
-                                    <button onClick={async () => {
-                                        await handleDeleteCate(data, setNoti)
-                                        const cateList = await getListCate(setNoti)
-                                        setDataUser(cateList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
-                                        setOpenModal(false)
+                                {
+                                    loading ?
+                                        <div className='Loader' />
+                                        :
+                                        <>Xóa</>
+                                }
+                            </button>
+                            :
+                            isPopup == 1 ?
+                                <button
+                                    disabled={loading}
+                                    onClick={async () => {
+                                        setLoading(true)
+                                        await handleDeleteBook(data, setNoti)
+                                        const bookList = await getListBook(1, setNoti)
+                                        setDataUser(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
+                                        setLoading(false)
+                                        setOpenModal(false) 
                                     }
                                     }>
-                                        Xóa
-                                    </button> :
-                                    isPopup == 4 ?
-                                        <button onClick={async () => {
-                                            await handleDeleteBanner(data, setNoti)
-                                            const bannerList = await getListBanner(setNoti)
-                                            setDataUser(bannerList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
+                                    {
+                                        loading ?
+                                            <div className='Loader' />
+                                            :
+                                            <>Xóa</>
+                                    }
+                                </button> :
+                                isPopup == 3 ?
+                                    <button
+                                        disabled={loading}
+                                        onClick={async () => {
+                                            setLoading(true)
+                                            await handleDeleteCate(data, setNoti)
+                                            const cateList = await getListCate(setNoti)
+                                            setDataUser(cateList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
+                                            setLoading(false)
                                             setOpenModal(false)
                                         }
                                         }>
-                                            Xóa
+                                        {
+                                            loading ?
+                                                <div className='Loader' />
+                                                :
+                                                <>Xóa</>
+                                        }
+                                    </button> :
+                                    isPopup == 4 ?
+                                        <button
+                                            disabled={loading}
+                                            onClick={async () => {
+                                                setLoading(true)
+                                                await handleDeleteBanner(data, setNoti)
+                                                const bannerList = await getListBanner(setNoti)
+                                                setDataUser(bannerList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
+                                                setLoading(false)
+                                                setOpenModal(false)
+                                            }
+                                            }>
+                                            {
+                                                loading ?
+                                                    <div className='Loader' />
+                                                    :
+                                                    <>Xóa</>
+                                            }
                                         </button>
                                         :
                                         <></>

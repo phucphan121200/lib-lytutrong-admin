@@ -11,17 +11,19 @@ const PopupBanner = ({ setOpenModal, createUpdate, category, data, setNoti, setD
     const [dataBook, setDataBook1] = useState(createUpdate == 1 ? "" : createUpdate == 2 ? data : "")
     const [url, setUrl] = useState(createUpdate == 1 ? "https://content.fortune.com/wp-content/uploads/2019/04/brb05.19.plus_.jpg" : data.image)
     const [image, setImage] = useState(null)
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         const value = e.target.value;
         setDataBook1({ ...dataBook, [e.target.name]: value });
     };
-    const handleImageChange = (e) => {
+    const handleImageChange = async (e) => {
         if (e.target.files[0]) {
             //setImage(e.target.files[0])
             const fileName = "lib-lytutrong" + new Date().getTime() + new Date().getHours() + new Date().getMinutes() + new Date().getSeconds();
             const imageRef = ref(storage, fileName)
-            uploadBytes(imageRef, e.target.files[0]).then(() => {
+            setLoading(true)
+            await uploadBytes(imageRef, e.target.files[0]).then(() => {
                 getDownloadURL(imageRef).then((url) => {
                     setUrl(url)
                     setDataBook1({ ...dataBook, image: url });
@@ -33,6 +35,7 @@ const PopupBanner = ({ setOpenModal, createUpdate, category, data, setNoti, setD
                 .catch((err) => {
                     console.log(err.message, "Lỗi up ảnh")
                 })
+            setLoading(false)
         }
     }
     return (
@@ -95,7 +98,7 @@ const PopupBanner = ({ setOpenModal, createUpdate, category, data, setNoti, setD
                                                 </div>
                                             </div >
                                             <div className='bannerImage'>
-                                                <Avatar src={url} alt="" sx={{  width: 455, height: 220, borderRadius: 0 }} />
+                                                <Avatar src={url} alt="" sx={{ width: 455, height: 220, borderRadius: 0 }} />
                                                 <input type="file" id='file' accept="image/png, image/jpg, image/jpeg" onChange={handleImageChange} style={{ display: 'none' }} />
                                                 {/* <button onClick={handleUpload}>Xác nhận</button> */}
                                                 <div className='faded'>
@@ -115,11 +118,19 @@ const PopupBanner = ({ setOpenModal, createUpdate, category, data, setNoti, setD
                                         setOpenModal(false)
                                     }}>Đóng</button>
                                 <button className="editButton"
+                                    disabled={loading}
                                     onClick={async () => {
+                                        setLoading(true)
                                         await createBanner(dataBook, setNoti, setOpenModal)
                                         const bannerList = await getListBanner(setNoti)
                                         setDataBook(bannerList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
-                                    }}>Thêm mới</button>
+                                        setLoading(false)
+                                    }}>{
+                                        loading ?
+                                            <div className='Loader' />
+                                            :
+                                            <>Thêm mới</>
+                                    }</button>
 
                             </div>
                         </>
@@ -200,11 +211,19 @@ const PopupBanner = ({ setOpenModal, createUpdate, category, data, setNoti, setD
                                             setOpenModal(false)
                                         }}>Đóng</button>
                                     <button className="editButton"
+                                        disabled={loading}
                                         onClick={async () => {
+                                            setLoading(true)
                                             await updateBanner(dataBook._id, dataBook, setNoti, setOpenModal)
                                             const bookList = await getListBanner(setNoti)
                                             setDataBook(bookList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
-                                        }}>Cập nhật</button>
+                                            setLoading(false)
+                                        }}>{
+                                            loading ?
+                                                <div className='Loader' />
+                                                :
+                                                <>Cập nhật</>
+                                        }</button>
 
                                 </div>
                             </>

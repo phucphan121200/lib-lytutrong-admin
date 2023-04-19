@@ -29,6 +29,7 @@ const DatatableBook = () => {
     const [modalUpdate, setModalUpdate] = useState(false);
     const [modalUpload, setModalUpload] = useState(false);
     const [createUpdate, setCreateUpdate] = useState(0);
+    const [loading, setLoading] = useState(false);
     const [category, setCate] = useState("")
     const [choose, setChoose] = useState(1)
     const [notify, setNotify] = useState({
@@ -192,13 +193,20 @@ const DatatableBook = () => {
                     >
                         Thêm dữ liệu
                     </div>
-                    <div className="linkEx" style={{ marginRight: "10px" }}
-                        onClick={() => {
-                            exportFileBook(choose, setNotify)
+                    <button className="linkEx" style={{ marginRight: "10px" }}
+                        onClick={async() => {
+                            setLoading(true)
+                            await exportFileBook(choose, setNotify)
+                            setLoading(false)
                         }}
                     >
-                        Xuất dữ liệu
-                    </div>
+                        {
+                            loading?
+                            <>Đang xuất...</>
+                            :
+                            <>Xuất dữ liệu</>
+                        }  
+                    </button>
                     <FormControl sx={{ width: "250px", marginRight: "10px"}} size="small">
                         <InputLabel id="demo-simple-select-label">Lọc sách theo thể loại</InputLabel>
                         <Select

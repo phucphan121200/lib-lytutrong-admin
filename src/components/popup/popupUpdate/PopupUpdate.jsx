@@ -13,6 +13,7 @@ import ControlPointIcon from '@mui/icons-material/ControlPoint';
 const Popup = ({ setOpenModal, data, setNoti, createUpdate, setDataUser }) => {
     const [dataUser, setDataUserUpdate] = useState(createUpdate == 1 ? data : "")
     const [image, setImage] = useState(null)
+    const [loading, setLoading] = useState(false);
     const [url, setUrl] = useState(createUpdate == 1 ? data.image : "")
 
     const handleChangeSwitch = (e) => {
@@ -24,12 +25,13 @@ const Popup = ({ setOpenModal, data, setNoti, createUpdate, setDataUser }) => {
         setDataUserUpdate({ ...dataUser, [e.target.name]: value });
     };
 
-    const handleImageChange = (e) => {
+    const handleImageChange = async(e) => {
         if (e.target.files[0]) {
             //setImage(e.target.files[0])
             const fileName = "lib-lytutrong" + new Date().getTime() + new Date().getHours() + new Date().getMinutes() + new Date().getSeconds();
             const imageRef = ref(storage, fileName)
-            uploadBytes(imageRef, e.target.files[0]).then(() => {
+            setLoading(true)
+            await uploadBytes(imageRef, e.target.files[0]).then(() => {
                 getDownloadURL(imageRef).then((url) => {
                     setUrl(url)
                     setDataUserUpdate({ ...dataUser, image: url });
@@ -41,6 +43,7 @@ const Popup = ({ setOpenModal, data, setNoti, createUpdate, setDataUser }) => {
                 .catch((err) => {
                     console.log(err.message, "Lỗi up ảnh")
                 })
+            setLoading(false)
         }
     }
     // const handleSubmit = () => {
@@ -129,7 +132,7 @@ const Popup = ({ setOpenModal, data, setNoti, createUpdate, setDataUser }) => {
                                 <div className='fade'>
                                 </div>
                                 <label className='modify' htmlFor="file">
-                                    <ControlPointIcon style={{fontSize: "30px"}}/>
+                                    <ControlPointIcon style={{ fontSize: "30px" }} />
                                 </label>
                             </div>
                             <form className='userInfor'>
@@ -204,23 +207,36 @@ const Popup = ({ setOpenModal, data, setNoti, createUpdate, setDataUser }) => {
                     </button>
                     {
                         createUpdate == 1 ?
-                            <button onClick={async () => {
+                            <button disabled={loading} onClick={async () => {
+                                setLoading(true)
                                 await handleUpdate(data._id, dataUser, setNoti, setOpenModal)
                                 const userList = await getListUser(setNoti)
                                 setDataUser(userList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
+                                setLoading(false)
                             }
                             }>
-                                Cập nhật
+                                {
+                                    loading ?
+                                        <div className='Loader' />
+                                        :
+                                        <>Cập nhật</>
+                                }
                             </button>
                             :
-                            <button onClick={async () => {
+                            <button disabled={loading} onClick={async () => {
+                                setLoading(true)
                                 await handleCreate(dataUser, setNoti, setOpenModal)
                                 const userList = await getListUser(setNoti)
                                 setDataUser(userList?.data?.data.map((item, index) => ({ ...item, index: index + 1 })))
-
+                                setLoading(false)
                             }
                             }>
-                                Thêm mới
+                                {
+                                    loading ?
+                                        <div className='Loader' />
+                                        :
+                                        <>Thêm mới</>
+                                }
                             </button>
                     }
 

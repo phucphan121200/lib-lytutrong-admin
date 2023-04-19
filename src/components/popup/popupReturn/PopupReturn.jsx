@@ -35,6 +35,7 @@ const PopupReturn = ({ nameBook,
             }
         ]
     })
+    const [loading, setLoading] = useState(false);
 
     const changeValueAmount = (e) => {
         const newObj = JSON.parse(JSON.stringify(dataPopup))
@@ -68,7 +69,9 @@ const PopupReturn = ({ nameBook,
 
                     <div className="footerr">
                         <button
+                            disabled={loading}
                             onClick={async () => {
+                                setLoading(true)
                                 await cancelBook(idBorrow, {
                                     userBorrowInfo: setDataUser.userBorrowInfo._id,
                                     cartItems: [
@@ -89,13 +92,21 @@ const PopupReturn = ({ nameBook,
                                 const cancelList = await getUserCancelBook(setDataUser.userBorrowInfo._id, setNotify)
                                 setDataCancel(cancelList?.data?.data.cartItems.slice(0).reverse().map((item, index) => ({ ...item, index: index + 1 })))
                                 setRecordCancel(cancelList?.data?.data.cartItems.slice(0).reverse().map((item, index) => ({ ...item, index: index + 1 })))
+                                setLoading(false)
                             }}
                             id="rejectBtn"
                         >
-                            Từ chối
+                            {
+                                loading ?
+                                    <div className='Loader' />
+                                    :
+                                    <>Từ chối</>
+                            }
                         </button>
                         <button
+                            disabled={loading}
                             onClick={async () => {
+                                setLoading(true)
                                 await corfirmBook(idBorrow, dataPopup, setNotify, setOpenModal)
                                 const userCart = await getUserCart(setDataUser.userBorrowInfo._id, setNotify)
                                 setUserCartItems(userCart?.data?.data?.cartItems.slice(0).reverse().map((item, index) => ({ ...item, index: index + 1 })))
@@ -112,9 +123,15 @@ const PopupReturn = ({ nameBook,
                                 const cancelList = await getUserCancelBook(setDataUser.userBorrowInfo._id, setNotify)
                                 setDataCancel(cancelList?.data?.data.cartItems.slice(0).reverse().map((item, index) => ({ ...item, index: index + 1 })))
                                 setRecordCancel(cancelList?.data?.data.cartItems.slice(0).reverse().map((item, index) => ({ ...item, index: index + 1 })))
+                                setLoading(false)
                             }}
                         >
-                            Duyệt sách
+                            {
+                                loading ?
+                                    <div className='Loader' />
+                                    :
+                                    <>Duyệt sách</>
+                            }
                         </button>
 
                     </div>
@@ -151,7 +168,9 @@ const PopupReturn = ({ nameBook,
                             Đóng
                         </button>
                         <button
+                            disabled={loading}
                             onClick={async () => {
+                                setLoading(true)
                                 await borrowBookinDetail(idBorrow, dataPopup, setNotify, setOpenModal)
 
                                 const userCart = await getUserCart(setDataUser.userBorrowInfo._id, setNotify)
@@ -165,9 +184,15 @@ const PopupReturn = ({ nameBook,
                                 const userWaitBorrow = await getUserWaittoBorrowBook(setDataUser.userBorrowInfo._id, setNotify)
                                 setDataWaitBorrow(userWaitBorrow?.data?.data?.cartItems.slice(0).reverse().map((item, index) => ({ ...item, index: index + 1 })))
                                 setRecordWaittoBorrow(userWaitBorrow?.data?.data?.cartItems.slice(0).reverse().map((item, index) => ({ ...item, index: index + 1 })))
+                                setLoading(false)
                             }}
                         >
-                            Xác nhận
+                            {
+                                loading ?
+                                    <div className='Loader' />
+                                    :
+                                    <>Xác nhận</>
+                            }
                         </button>
 
                     </div>

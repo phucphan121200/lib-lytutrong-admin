@@ -29,6 +29,7 @@ const Datatable = () => {
   const [modalUpload, setModalUpload] = useState(false);
   const [modalReset, setModalReset] = useState(false);
   const [createUpdate, setCreateUpdate] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [notify, setNotify] = useState({
     isOpen: false,
     message: "",
@@ -196,11 +197,19 @@ const Datatable = () => {
           }}>
             Thêm dữ liệu
           </div>
-          <div className="linkEx" style={{ marginRight: "10px" }} onClick={() => {
-            exportFileUser(setNotify)
+          <button className="linkEx" style={{ marginRight: "10px" }} disabled={loading} onClick={async() => {
+            setLoading(true);
+            await exportFileUser(setNotify);
+            setLoading(false);
           }}>
-            Xuất dữ liệu
-          </div>
+            {
+              loading ?
+              <>Đang xuất...</>
+              :
+              <>Xuất dữ liệu</>
+            }
+
+          </button>
           <FormControl size="small" sx={{ marginRight: "10px" }}
             variant="outlined"
             id="outlined-required"
