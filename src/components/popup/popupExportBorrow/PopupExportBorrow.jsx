@@ -137,7 +137,7 @@ const PopupExportBorrow = ({ setOpenModal, setNoti }) => {
             headerName: "Tình trạng",
             headerAlign: "center",
             align: "center",
-            width: 120,
+            width: 100,
             renderCell: (params) => {
                 switch (params.row.status) {
                     case "Cận hạn":
